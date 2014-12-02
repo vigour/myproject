@@ -3,9 +3,11 @@ package com.keitsen.demo.basic.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -48,6 +50,22 @@ public class ReflectionUtil {
 		invokeMethod(obj, setterMethodName, new Class[] { type }, new Object[] { value });
 	}
 
+    /**
+     * 直接读取对象属性值,无视private/protected修饰符,不经过getter函数.
+     */
+    public static Object getFieldValue(final Object object, final Field field) {
+        makeAccessible(field);
+
+        Object result = null;
+        try {
+            result = field.get(object);
+        } catch (IllegalAccessException e) {
+            logger.error("不可能抛出的异常{}", e);
+        }
+        return result;
+    }
+
+
 	/**
 	 * 直接读取对象属性值, 无视private/protected修饰符, 不经过getter函数.
 	 */
@@ -83,15 +101,45 @@ public class ReflectionUtil {
 			logger.error("不可能抛出的异常:{}", e);
 		}
 	}
+    /**
+     * 直接设置对象属性值,无视private/protected修饰符,不经过setter函数.
+     */
+    public static <T> void setFieldValue(final T object, final Field field, final Object value) {
+        makeAccessible(field);
 
-   /**
+        try {
+            field.set(object, value);
+        } catch (IllegalAccessException e) {
+            logger.error("不可能抛出的异常:{}", e);
+        }
+    }
+    /**
      * 循环向上转型,获取对象的DeclaredField.
      */
-//    protected static Field getDeclaredField(final Object object, final String fieldName) {
-//        Assert.notNull(object, "object不能为空");
-//        return getDeclaredField(object.getClass(), fieldName);
-//    }
-
+    public static Field getDeclaredField(final Object object, final String fieldName) {
+        Assert.notNull(object, "object不能为空");
+        Assert.hasText(fieldName, "fieldName");
+        for (Class<?> superClass = object.getClass(); superClass != Object.class; superClass = superClass.getSuperclass()) {
+            try {
+                return superClass.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                // Field不在当前类定义,继续向上转型
+                //e.printStackTrace();
+            }
+        }
+        return null;
+    }
+    
+    public static List<Field> getDeclaredFields(final Object object) {
+        Assert.notNull(object, "object不能为空");
+        List<Field> fields=new ArrayList<>();
+        for (Class<?> superClass = object.getClass(); superClass != Object.class; superClass = superClass.getSuperclass()) {
+            Field[] f=superClass.getDeclaredFields();
+            fields.addAll(Arrays.asList(f));
+        }
+        return fields;
+    }
+    
 	/**
 	 * 循环向上转型, 获取对象的DeclaredField,	 并强制设置为可访问.
 	 * 
@@ -304,4 +352,13 @@ public class ReflectionUtil {
 		}
 		return new RuntimeException("Unexpected Checked Exception.", e);
 	}
+	
+	/**
+     * 循环向上转型,获取对象的DeclaredField.
+     */
+    protected static void makeAccessible(final Field field) {
+        if (!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers())) {
+            field.setAccessible(true);
+        }
+    }
 }

@@ -14,6 +14,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
+import com.keitsen.demo.basic.BasicConstants;
 import com.keitsen.demo.basic.util.PathUtil;
 import com.keitsen.demo.module.Constants;
 import com.keitsen.demo.module.user.service.IUserService;
@@ -25,8 +26,8 @@ import com.opensymphony.xwork2.ActionSupport;
 @Controller
 @Namespace("/")
 @Results({ 
-	@Result(name = Action.INPUT, location = "/login.jsp") ,
-	@Result(name = Action.SUCCESS, location = "/main.jsp")
+	@Result(name = Action.INPUT, location = "login.jsp") ,
+	@Result(name = BasicConstants.MAIN_PAGE,  location= "main.jsp")
 	}
 	)
 public class LoginAction extends ActionSupport {
@@ -85,12 +86,12 @@ public class LoginAction extends ActionSupport {
 			return INPUT;
 		}
 
-		if ("root".equals(getUsername()) && "root123".equals(getPassword())) {
-			session.put(Constants.CURRENT_LOGIN_USER, getUsername());
-			System.out.println("登陆成功,用户名为=" + getUsername());
-			logger.info("登陆成功！！！");
-			return SUCCESS;
-		}
+//		if ("root".equals(getUsername()) && "root123".equals(getPassword())) {
+//			session.put(Constants.CURRENT_LOGIN_USER, getUsername());
+//			System.out.println("登陆成功,用户名为=" + getUsername());
+//			logger.info("登陆成功！！！");
+//			return SUCCESS;
+//		}
 
 		if (userService.getUserLogin(username, password) != null) {
 			session.put(Constants.CURRENT_LOGIN_USER, getUsername());
@@ -102,5 +103,9 @@ public class LoginAction extends ActionSupport {
 		logger.info("登陆失败！！！");
 		request.setAttribute("loginResult", "用户名或密码错误！");
 		return INPUT;
+	}
+	
+	public String mainPage() throws Exception{
+		return BasicConstants.MAIN_PAGE;
 	}
 }

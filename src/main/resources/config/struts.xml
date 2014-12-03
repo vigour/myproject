@@ -20,6 +20,8 @@
     <constant name="struts.action.extension" value="action,do,jhtml,," />
     <!-- 文件上传大小设置 -->
     <constant name="struts.multipart.maxSize" value="10485760" />
+    <!-- 结果资源的路径  
+    <constant name="struts.convention.result.path" value="/WEB-INF/content/" />  --> 
   	<constant name="struts.convention.action.suffix" value="Action" /> 
   	<constant name="struts.convention.action.name.lowercase" value="true" /> 
   	<constant name="struts.convention.action.name.separator" value="_" /> 

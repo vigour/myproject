@@ -14,8 +14,8 @@ import com.keitsen.demo.module.function.service.IFunctionService;
 import com.keitsen.demo.module.function.vo.FunctionTreeVO;
 import com.keitsen.demo.module.function.vo.FunctionVO;
 
-@Controller
-@Namespace("/sample")
+//@Controller
+//@Namespace("/")
 public class FunctionAction extends BasicAction<FunctionVO >{
 
 	private static final long serialVersionUID = 6220038897701201113L;

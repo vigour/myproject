@@ -18,7 +18,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(function(){
 		
 		
-		$('#resourceTree').tree({
+		$('#functionTree').tree({
 			url : 'function!getFunctionTree.action',
 			onClick: function(node){
 				var title = node.text;
@@ -47,7 +47,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <body class="easyui-layout" fit=true style="width:100%;height:100%">   
     <div data-options="region:'north'" id="northPanel" style="height:10%;"></div>   
     <div data-options="region:'west',title:'菜单',split:true" id="westPanel" style="width:15%;">
-    	<ul id="resourceTree" class="easyui-tree"></ul>
+    	<ul id="functionTree" class="easyui-tree"></ul>
     </div>   
     <div data-options="region:'center'" id="centerPenel" class="easyui-tabs" style="width:100%;height:100%">
     	  <div title="首页" style="padding:20px;display:none;">   

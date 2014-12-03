@@ -59,7 +59,7 @@ public class User extends UUIDEntity implements Module {
 		this.password = password;
 	}
 
-	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER, cascade = {
+	@ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY, cascade = {
 			CascadeType.MERGE, CascadeType.PERSIST })
 	@JoinTable(name = "T_USER_ROLE", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") })
 	public Set<Role> getRoles() {

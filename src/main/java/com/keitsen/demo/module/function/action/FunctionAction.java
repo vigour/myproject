@@ -4,9 +4,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.struts2.convention.annotation.Namespace;
-import org.springframework.stereotype.Controller;
-
 import net.sf.json.JSONArray;
 
 import com.keitsen.demo.basic.action.BasicAction;
@@ -44,7 +41,7 @@ public class FunctionAction extends BasicAction<FunctionVO >{
 	
 	public String getFunctionTree() throws Exception{
 		List<FunctionTreeVO> functionTree = this.functionService.getFunctionTreeByParentId(getId());
-		outString(JSONArray .fromObject(functionTree).toString());
+		renderString(JSONArray .fromObject(functionTree).toString());
 		return null;				
 	}
 }

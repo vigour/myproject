@@ -1,6 +1,8 @@
 package com.keitsen.demo.module.user.service.impl;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -12,6 +14,7 @@ import com.keitsen.demo.module.user.dao.IUserDao;
 import com.keitsen.demo.module.user.entity.User;
 import com.keitsen.demo.module.user.service.IUserService;
 import com.keitsen.demo.module.user.vo.LoginVO;
+import com.keitsen.demo.module.user.vo.UserVO;
 
 @Service(IUserService.SERVICE_NAME)
 @Transactional(rollbackFor = Exception.class)
@@ -47,6 +50,18 @@ public class UserServiceImpl extends BasicService<User, String> implements IUser
 		equalFields.put("username", username);
 		equalFields.put("password", password);
 		return userDao.get(equalFields, null, null, null, null);
+	}
+
+
+	@Override
+	public List<UserVO> getAllUser() {
+		List<UserVO> voList = new ArrayList<UserVO>();
+		List<User> users = this.userDao.getAll();
+		for(User user : users){
+			UserVO vo = (UserVO) user.getVO();
+			voList.add(vo);
+		}
+		return voList;
 	}
 
 

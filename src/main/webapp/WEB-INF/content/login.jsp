@@ -60,6 +60,12 @@
 			$('#login_form').form('clear');
 		});
 		
+		$('#login_form').find('input').on('keyup',function(event){
+			if(event.keyCode == 13){
+				$('#login_form').submit();
+			}
+	});
+		
 	})
 </script>
 <title>登录界面</title>

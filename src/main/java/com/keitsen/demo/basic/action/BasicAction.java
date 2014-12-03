@@ -16,16 +16,15 @@ import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
 
-import com.keitsen.demo.basic.entity.PageModel;
-import com.keitsen.demo.basic.logger.Logger;
 import com.keitsen.demo.basic.util.DateJsonValueProcessor;
+import com.keitsen.demo.basic.util.DateUtil;
 import com.keitsen.demo.basic.util.ReflectionUtil;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
-
 
 /**
  * Struts2中典型CRUD Action的抽象基类.
@@ -36,35 +35,24 @@ import com.opensymphony.xwork2.Preparable;
  * 
  * @author  
  */
-@SuppressWarnings({ "unchecked", "serial" })
-public class BasicAction<T>  extends ActionSupport implements ModelDriven<T>, Preparable{
+public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Preparable, ServletRequestAware, ServletResponseAware{
 
-	@Logger
-    protected  Log logger;// = LogFactory.getLog(getClass());
+	private static final long serialVersionUID = 521973244692611994L;
 
-    protected Integer pageNum = 1; // 当前是第几页
+	protected  Log logger;// = LogFactory.getLog(getClass());
 
-    protected Integer pageSize = 20; // 每页显示多少条
-
-    protected String orderField; // 排序字段
-
-    protected String orderDirection; // 排序方向
-
-    protected PageModel<Object> pageModel = new PageModel<Object>();
-
-    protected HttpServletRequest request = ServletActionContext.getRequest();
-
-    protected HttpServletResponse response = ServletActionContext.getResponse();
-
-    private String[] ids; // id数组
-
-    protected T vo;
-    
-    
-    private int start;
-    
-    private int limit;
-    
+	protected HttpServletRequest request;
+	
+	protected HttpServletResponse response;
+	
+	protected HttpSession session; 
+	
+	protected T vo;
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
 	public BasicAction(){
 		try {
 			Class<?> clazz = ReflectionUtil.getSuperClassGenricType(getClass());
@@ -75,124 +63,47 @@ public class BasicAction<T>  extends ActionSupport implements ModelDriven<T>, Pr
 			e.printStackTrace();
 		}
 	}
-
-    // 将处理信息发送到客户端
-    protected void outMsg(String msg) {
-
-        response.setCharacterEncoding("utf-8");
-        try {
-            PrintWriter out = response.getWriter();
-            out.print(msg);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     
-    
-
-    public Integer getPageSize() {
-		return pageSize;
+	public void setServletRequest(HttpServletRequest request) {
+		this.request = request;  
+        this.session = request.getSession();  
 	}
 
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
+	
+	public void setServletResponse(HttpServletResponse response) {
+		this.response = response;
 	}
 
-
-    public Integer getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
-        pageModel.setPageNum(pageNum);
-    }
-
-    public String getOrderField() {
-        return orderField;
-    }
-
-    public void setOrderField(String orderField) {
-        this.orderField = orderField;
-        pageModel.setOrderField(orderField);
-    }
-
-    public String getOrderDirection() {
-        return orderDirection;
-    }
-
-    public void setOrderDirection(String orderDirection) {
-        this.orderDirection = orderDirection;
-        pageModel.setOrderDirection(orderDirection);
-    }
-    
-
-	public Log getLog() {
-		return LogFactory.getLog(this.getClass());
-	}
-
-	public HttpServletRequest getRequest() {
-		return ServletActionContext.getRequest();
-	}
-
-	public HttpServletResponse getResponse() {
-		return ServletActionContext.getResponse();
-	}
-
-	public HttpSession getSession() {
-		return ServletActionContext.getRequest().getSession();
-	}
-
-
-    public String[] getIds() {
-        return ids;
-    }
-
-    public void setIds(String[] ids) {
-        this.ids = ids;
-    }
-
-    public T getVo() {
-		return vo;
-	}
-
-	public void setVo(T vo) {
-		this.vo = vo;
+	/**
+	 * 实现空的prepare()函数,屏蔽了所有Action函数都会执行的公共的二次绑定.
+	 */
+	public void prepare() throws Exception {
+		
 	}
 	
-	
-	public int getStart() {
-		return start;
-	}
-
-	public void setStart(int start) {
-		this.start = start;
-		pageModel.setStart(start);
-	}
-
-	public int getLimit() {
-		return limit;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
-		pageModel.setLimit(limit);
-		pageModel.setPageSize(limit);
-	}
-
-	public void outJsonString(String str) {
-		getLog().info(str);
-		outString(str);
-	}
-
-	public void clearSession() {
-		for (Enumeration<String> items = getSession().getAttributeNames(); items
-				.hasMoreElements();) {
-			String item = (String) items.nextElement();
-			getLog().info(item);
-			getSession().removeAttribute(item);
+	/**
+	 * 将数据渲染到前台页面
+	 * @param str
+	 */
+	public void renderString(String str) {
+		try {
+			response.setContentType("application/json;charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			getLog().info(str);
+			out.write(str);
+			// 清空缓存
+			out.flush();
+			// 关闭流
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+	}
+	
+	public void renderJsonString(String str) {
+		getLog().info(str);
+		renderString(str);
 	}
 	
 	//读取Json，防止死循环错误以及时间字段的格式化
@@ -204,42 +115,56 @@ public class BasicAction<T>  extends ActionSupport implements ModelDriven<T>, Pr
 		return cfg;
 	}
 	
-	public void outJson(Object obj,String pattern) {
+	public void renderJson(Object obj) {
+		final String pattern = DateUtil.YYMMDDHHMMSS_EN;
 		getLog().info(JSONObject.fromObject(obj,jsoncfg(pattern)).toString());
-		outJsonString(JSONObject.fromObject(obj,jsoncfg(pattern)).toString());
+		renderJsonString(JSONObject.fromObject(obj,jsoncfg(pattern)).toString());
+	}
+	public void renderJson(Object obj,String pattern) {
+		getLog().info(JSONObject.fromObject(obj,jsoncfg(pattern)).toString());
+		renderJsonString(JSONObject.fromObject(obj,jsoncfg(pattern)).toString());
 	}
 
-	public void outJsonArray(Object array,String pattern) {
+	public void renderJsonArray(Object array) {
+		final String pattern = DateUtil.YYMMDDHHMMSS_EN;
 		getLog().info(JSONArray.fromObject(array,jsoncfg(pattern)).toString());
-		outString(JSONArray.fromObject(array,jsoncfg(pattern)).toString());
+		renderString(JSONArray.fromObject(array,jsoncfg(pattern)).toString());
 	}
-
-	public void outString(String str) {
-		try {
-			getResponse().setContentType("application/json;charset=UTF-8");
-	        getResponse().setCharacterEncoding("UTF-8");
-			PrintWriter out = getResponse().getWriter();
-			getLog().info(str);
-			out.write(str);
-			// 清空缓存
-			out.flush();
-			// 关闭流
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+	
+	public void renderJsonArray(Object array,String pattern) {
+		getLog().info(JSONArray.fromObject(array,jsoncfg(pattern)).toString());
+		renderString(JSONArray.fromObject(array,jsoncfg(pattern)).toString());
+	}
+	
+	
+	/**
+	 * 清空Session
+	 */
+	public void clearSession() {
+		for (Enumeration<String> items = session.getAttributeNames(); items
+				.hasMoreElements();) {
+			String item = (String) items.nextElement();
+			getLog().info(item);
+			session.removeAttribute(item);
 		}
 	}
 
-	/**
-	 * 实现空的prepare()函数,屏蔽了所有Action函数都会执行的公共的二次绑定.
-	 */
-	@Override
-	public void prepare() throws Exception {
-		
+	public T getVo() {
+		return vo;
 	}
 
+	public void setVo(T vo) {
+		this.vo = vo;
+	}
+	
 	@Override
 	public T getModel() {
 		return null;
 	}
+
+	public Log getLog() {
+		return LogFactory.getLog(this.getClass());
+	}
+
+
 }

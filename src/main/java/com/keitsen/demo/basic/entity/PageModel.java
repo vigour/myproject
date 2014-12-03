@@ -28,6 +28,12 @@ public class PageModel<E> implements Serializable {
 	 * 查询记录数
 	 */
 	private Long totalRecords;
+	
+	/**
+	 * 总记录数
+	 */
+	private Long total;
+	
 
 	/**
 	 * 当前页码

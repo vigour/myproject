@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.keitsen.demo.basic.entity.PageModel;
 import com.keitsen.demo.basic.service.impl.BasicService;
 import com.keitsen.demo.module.user.dao.IUserDao;
 import com.keitsen.demo.module.user.entity.User;
@@ -62,6 +63,23 @@ public class UserServiceImpl extends BasicService<User, String> implements IUser
 			voList.add(vo);
 		}
 		return voList;
+	}
+
+
+	@Override
+	public PageModel<UserVO> getAllUserPage(PageModel<UserVO> page) {
+		List<UserVO> userVOs = new ArrayList<UserVO>();
+		List<User> pageUser =  
+				this.userDao.findResultList(null,null,null,null,null,null,page.getFistResult(),page.getMaxResults());
+		for(User u: pageUser){
+			UserVO vo = new UserVO();
+			vo = (UserVO) u.getVO();
+			userVOs.add(vo); 
+		}
+		page.setList(userVOs);
+		page.setTotalRecords(this.userDao.getTotalCount(null, null, null, null, null));
+		
+		return page;
 	}
 
 

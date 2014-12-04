@@ -1,26 +1,27 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>myproject</groupId>
-  <artifactId>myproject</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
-   <url>http://maven.apache.org</url>
-<!-- 属性配置 -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>myproject</groupId>
+	<artifactId>myproject</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<url>http://maven.apache.org</url>
+	<!-- 属性配置 -->
 	<properties>
 		<!-- 编码属性 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- jUnit  版本属性  -->
+		<!-- jUnit 版本属性 -->
 		<junit.version>4.11</junit.version>
 
-		<!-- servlet  版本属性  -->
+		<!-- servlet 版本属性 -->
 		<servlet.version>3.0.1</servlet.version>
-		
+
 		<!-- JSP 版本属性 -->
 		<jsp.version>2.2</jsp.version>
-		
+
 		<!-- JSTL版本属性 -->
 		<jstl.version>1.2</jstl.version>
-		
+
 		<!-- tomcat 插件属性 -->
 		<tomcat7-maven-plugin-version>2.1</tomcat7-maven-plugin-version>
 
@@ -33,44 +34,44 @@
 		<!-- hibernate 版本属性 -->
 		<hibernate.version>3.6.5.Final</hibernate.version>
 
-		<!-- dbcp  版本属性 -->
+		<!-- dbcp 版本属性 -->
 		<dbcp.version>1.4</dbcp.version>
-		
+
 		<!-- aspectj 版本属性 -->
 		<aspectj.version>1.8.2</aspectj.version>
-		
+
 		<!-- Spring 版本属性 -->
 		<spring.version>3.1.1.RELEASE</spring.version>
 
 		<!-- log4j 版本属性 -->
 		<log4j.version>1.2.16</log4j.version>
-		
-		<!--  -->
+
+		<!-- -->
 		<slf4j.version>1.6.5</slf4j.version>
-		
-		
+
+
 		<!-- javassist 版本属性 -->
 		<javassist.version>3.11.0.GA</javassist.version>
-		
+
 
 		<!-- cglib 版本属性 -->
 		<cglib.version>2.2.2</cglib.version>
-		
+
 		<!-- commons-pool 版本属性 -->
 		<pool.version>1.6</pool.version>
-		
+
 		<!-- ezmorph 版本属性 -->
 		<ezmorph.version>1.0.6</ezmorph.version>
-		
-		<!-- jsonlib 版本属性  -->
+
+		<!-- jsonlib 版本属性 -->
 		<jsonlib.version>2.4</jsonlib.version>
-		
-		<!-- jackson 版本属性   -->
+
+		<!-- jackson 版本属性 -->
 		<jackson.version>1.9.11</jackson.version>
-		
+
 		<!-- collections 版本属性 -->
 		<collections.version>3.2</collections.version>
-		
+
 		<!-- beanutils 版本属性 -->
 		<beanutils.version>1.9.2</beanutils.version>
 
@@ -197,9 +198,14 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 
+		<!-- <dependency> -->
+		<!-- <groupId>org.slf4j</groupId> -->
+		<!-- <artifactId>slf4j-nop</artifactId> -->
+		<!-- <version>${slf4j.version}</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-nop</artifactId>
+			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
 
@@ -315,15 +321,15 @@
 						<contextReloadable>true</contextReloadable>
 					</configuration>
 				</plugin>
-				<plugin>  
-			        <groupId>org.apache.maven.plugins</groupId>  
-			        <artifactId>maven-compiler-plugin</artifactId>  
-			        <version>2.3.2</version>  
-			        <configuration>  
-			            <source>1.7</source>  
-			            <target>1.7</target>  
-			        </configuration>  
-			    </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

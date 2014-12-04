@@ -38,6 +38,7 @@ public class User extends UUIDEntity implements Module {
 	private String username;
 
 	private String password;
+	
 
 	private Set<Role> roles = new HashSet<Role>(0);
 
@@ -78,7 +79,15 @@ public class User extends UUIDEntity implements Module {
 		vo.setPassword(password);
 		vo.setStatus(this.getStatus());
 		vo.setVisible(this.isVisible());
+		if(creator!=null){
+			vo.setCreator(creator.getUsername());
+			vo.setCreatorId(creator.getId());
+		}
 		vo.setCreationDate(getCreationDate());
+		if(modifier!=null){
+			vo.setModifier(modifier.getUsername());
+			vo.setModifierId(modifier.getId());
+		}
 		vo.setModificationDate(getModificationDate());
 		vo.setRemark(getRemark());
 		return vo;

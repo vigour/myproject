@@ -103,6 +103,7 @@ public interface IBasicDao<M extends Serializable, PK extends Serializable> {
 
 	// 获取pageModel
 	public PageModel<M> findPage(PageModel<M> page);
+	
 
 	public PageModel<M> queryPageModel(
 			LinkedHashMap<Object, Object> equalFields,

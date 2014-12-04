@@ -330,10 +330,10 @@ public abstract  class HibernateBasicDao<M extends Serializable, PK extends Seri
                 LikeFields, nullFields, whereHql);
 
         // 根据查询条件获取数据
-        int firstResult = (pageNo - 1) * pageSize;
-        if (firstResult < 0) {
-            firstResult = 0;
-        }
+        int firstResult = pageModel.getFistResult();
+//        if (firstResult < 0) {
+//            firstResult = 0;
+//        }
         List<M> list = findResultList( equalFields, notEqualFields, LikeFields,
                 nullFields, orderByFields, whereHql, firstResult, pageSize);
         // 设置pageModel

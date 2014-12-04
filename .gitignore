@@ -1,5 +1,7 @@
 /target/
-/bin//.settings/
-*/
+/bin//
 .classpath
 .project
+File.log
+.tern-project
+/.settings/

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
+import com.keitsen.demo.basic.entity.PageModel;
 import com.keitsen.demo.basic.util.DateJsonValueProcessor;
 import com.keitsen.demo.basic.util.DateUtil;
 import com.keitsen.demo.basic.util.ReflectionUtil;
@@ -49,8 +51,16 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 	
 	protected T vo;
 	
+	protected PageModel<T> pager = new PageModel<T>();
 	
+	//Easy UI分页参数
+	protected int page;
 	
+	protected int rows;
+	
+	protected String order;	//排序的方式
+	
+	protected String sort;	//排序的字段
 	
 	@SuppressWarnings("unchecked")
 	public BasicAction(){
@@ -136,6 +146,16 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 		renderString(JSONArray.fromObject(array,jsoncfg(pattern)).toString());
 	}
 	
+	/**
+	 * 渲染jQuery EasyUI 分页json
+	 * @param page
+	 */
+	public void renderPageModel(PageModel<T> page){
+		List<T> list = page.getList(); 
+		String json = "{\"total\":"+ page.getTotalRecords()+",\"rows\":"+JSONArray.fromObject(list) +"}";
+		renderString(json);
+	}
+	
 	
 	/**
 	 * 清空Session
@@ -157,6 +177,54 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 		this.vo = vo;
 	}
 	
+	
+	public PageModel<T> getPager() {
+		return pager;
+	}
+
+	public void setPager(PageModel<T> pager) {
+		this.pager = pager;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		this.page = Integer.parseInt(page);
+		pager.setPageNum(this.page );
+	}
+	
+
+	public int getRows() {
+		return rows;
+	}
+
+	public void setRows(String rows) {
+		this.rows = Integer.parseInt(rows);
+		pager.setPageSize(this.rows);
+	}
+	
+	
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+		pager.setOrderDirection(order);
+	}
+
+	
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+		pager.setOrderField(sort);
+	}
+
 	@Override
 	public T getModel() {
 		return null;

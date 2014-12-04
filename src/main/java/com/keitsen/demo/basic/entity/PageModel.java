@@ -25,14 +25,9 @@ public class PageModel<E> implements Serializable {
 	private List<E> list = new ArrayList<E>();
 
 	/**
-	 * 查询记录数
+	 * 查询总记录数
 	 */
 	private Long totalRecords;
-	
-	/**
-	 * 总记录数
-	 */
-	private Long total;
 	
 
 	/**
@@ -49,6 +44,10 @@ public class PageModel<E> implements Serializable {
 	
 	protected int limit;
 	
+	protected int fistResult;
+	
+	protected int maxResults;
+	
 
 	// 默认按照id倒序排列
 	private String orderField = "";
@@ -57,6 +56,12 @@ public class PageModel<E> implements Serializable {
 	//QBC 分页
 	private Criterion[] criterions;
 	private Order[] orders;
+	
+	
+	
+
+	public PageModel() {
+	}
 
 	public List<E> getList() {
 		return list;
@@ -95,7 +100,7 @@ public class PageModel<E> implements Serializable {
 	 * 获得每页的记录数量, 默认为20.
 	 */
 	public int getPageSize() {
-		return pageSize;
+		return pageSize<1?DEFAULT_PAGE_SIZE:pageSize;
 	}
 
 	/**
@@ -237,11 +242,25 @@ public class PageModel<E> implements Serializable {
 	public void setOrders(Order[] orders) {
 		this.orders = orders;
 	}
-
 	
+
+	public int getFistResult() {
+		return (pageNum - 1) * pageSize;
+	}
+
+	public void setFistResult(int fistResult) {
+		this.fistResult = fistResult;
+	}
+
+	public int getMaxResults() {
+		return getPageSize();
+	}
+
+	public void setMaxResults(int maxResults) {
+		this.maxResults = maxResults;
+	}
+
 	//-- 访问查询结果函数 --//
-
-
 	@Override
 	public String toString() {
 		return pageNum + pageSize + orderField + orderDirection;

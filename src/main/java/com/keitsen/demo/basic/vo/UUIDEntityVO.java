@@ -18,10 +18,14 @@ public class UUIDEntityVO implements Serializable{
 	private String creationDate;// 创建时间
 	
 	private String creator;		//创建人
+	
+	private String creatorId;	//创建人ID
 
 	private String modificationDate;// 最后修改时间
 	
 	private String modifier;	//修改人
+	
+	private String modifierId;	//修改人Id
 
 	private String remark;	// 备注
 	
@@ -68,6 +72,15 @@ public class UUIDEntityVO implements Serializable{
 		this.creator = creator;
 	}
 
+	
+
+	public String getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
+	}
 
 	public String getModificationDate() {
 		return modificationDate;
@@ -86,6 +99,15 @@ public class UUIDEntityVO implements Serializable{
 		this.modifier = modifier;
 	}
 	
+	
+	public String getModifierId() {
+		return modifierId;
+	}
+
+	public void setModifierId(String modifierId) {
+		this.modifierId = modifierId;
+	}
+
 	public String getRemark() {
 		return remark;
 	}

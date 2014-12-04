@@ -22,6 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			url : 'function!getFunctionTree.action',
 			onClick: function(node){
 				var title = node.text;
+				var url = node.url;
 				var iconcls = node.iconCls;
 				if(!!!iconcls){
 					return ;
@@ -31,7 +32,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}else{
 					$('#centerPenel').tabs('add',{   
 			 		    title:title,
-			 		   	href: node.url,
+			 		   	href: url,
 			 		   	iconCls : node.iconCls,
 			 		    closable:true  
 			 		});

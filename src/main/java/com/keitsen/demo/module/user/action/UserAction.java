@@ -1,7 +1,5 @@
 package com.keitsen.demo.module.user.action;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.apache.struts2.convention.annotation.Namespace;
@@ -34,9 +32,12 @@ public class UserAction extends BasicAction<UserVO>{
 
 
 	public String execute() throws Exception {
-		List<UserVO> users = userService.getAllUser();
-		
-		//Struts2Util.buildPagingJson(renderJsonArray(users), users.size());
 		return BasicConstants.MODULE_LIST;
+	}
+	
+	public String getAllUser() throws Exception{
+		pager = userService.getAllUserPage(pager);
+		renderPageModel(pager);
+		return null;
 	}
 }

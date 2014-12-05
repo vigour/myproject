@@ -82,6 +82,18 @@ public class UserServiceImpl extends BasicService<User, String> implements IUser
 		return page;
 	}
 
+	
+	/**
+	 * 新增用户
+	 */
+	@Override
+	public void createUser(UserVO uservo) {
+		User user = new User();
+		user = (User) uservo.getModule();
+		this.save(user);
+		
+	}
+
 
 
 

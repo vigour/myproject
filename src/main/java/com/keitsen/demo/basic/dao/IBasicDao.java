@@ -67,6 +67,8 @@ public interface IBasicDao<M extends Serializable, PK extends Serializable> {
 
 	public <X> List<X> find(final String hql, final Map<String, ?> values);
 
+	public <X> List<X> findByIds(final Collection<X> ids);
+	
 	public <X> X findUnique(final String hql, final Object... values);
 
 	public <X> X findUnique(final String hql, final Map<String, ?> values);

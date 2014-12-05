@@ -26,4 +26,27 @@ public class BasicConstants {
 	 * 默认跳转模块列表
 	 */
 	public static final String MODULE_LIST = "list" ;
+	
+	
+	
+	/**
+	 * 操作成功
+	 */
+	public static final String RESULT_TYPE_SUCCESS = "success";
+	
+	/**
+	 * 操作失败
+	 */
+	public static final String RESULT_TYPE_ERROR = "error";
+	
+	
+	public static final String CREATE_SUCCESS_MESSAGE = "保存成功!";
+
+	public static final String EDIT_SUCCESS_MESSAGE = "修改成功!";
+	
+	public static final String DELETE_SUCCESS_MESSAGE = "删除成功!";
+	
+	public static final String OPERATE_ERROR_MESSAGE = "操作失败!请联系管理员";
+	
+	
 }

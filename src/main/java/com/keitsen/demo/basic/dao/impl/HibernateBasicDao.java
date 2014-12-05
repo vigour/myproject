@@ -2,6 +2,7 @@ package com.keitsen.demo.basic.dao.impl;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -151,20 +152,13 @@ public abstract  class HibernateBasicDao<M extends Serializable, PK extends Seri
 //    }
     
     @Override
-    public void deleteArray(PK[] id) {
-        if (id != null && id.length >0) {
+    public void deleteArray(PK[] ids) {
+        if (ids != null && ids.length >0) {
             StringBuffer sbDelete = new StringBuffer();
             sbDelete.append("delete from ").append(entityClass.getSimpleName())
-                    .append(" as o where o.id in (");
-            for (int i = 0; i < id.length; i++) {
-                sbDelete.append("?" + ",");
-            }
-            sbDelete.delete(sbDelete.length() - 1, sbDelete.length());
-            sbDelete.append(")");
-            Query query = getSession().createQuery(sbDelete.toString());
-            for (int i = 0; i < id.length; i++) {
-                query.setParameter(i, id[i]);
-            }
+                    .append(" as o where o.id in (:ids)");
+            Query query = getSession().createQuery(sbDelete.toString())
+            		.setParameterList("ids", ids);
             query.executeUpdate();
         }
 
@@ -405,6 +399,9 @@ public abstract  class HibernateBasicDao<M extends Serializable, PK extends Seri
 	
 	@Override
 	public List<M> get(final Collection<PK> ids) {
+		if(ids == null || ids.size() < 1){
+			return Collections.EMPTY_LIST;
+		}
 		return find(Restrictions.in(getIdName(), ids));
 	}
 
@@ -535,6 +532,19 @@ public abstract  class HibernateBasicDao<M extends Serializable, PK extends Seri
 	@Override
 	public <X> List<X> find(final String hql, Map<String, ?> values) {
 		return createQuery(hql, values).list();
+	}
+	
+	@Override
+	public <X> List<X> findByIds(final Collection<X> ids){
+		if(ids == null||ids.size() < 1){
+			return Collections.EMPTY_LIST;
+		}
+		StringBuffer hql = new StringBuffer(" from ");
+		hql.append(this.entityClass.getSimpleName());
+		hql.append(" o where o.id in(:ids)");
+		 Query query = getSession().createQuery(hql.toString())
+         		.setParameterList("ids", ids);
+		return query.list();
 	}
 
 	@Override

@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.struts2.convention.annotation.Namespace;
+import org.springframework.stereotype.Controller;
+
 import net.sf.json.JSONArray;
 
 import com.keitsen.demo.basic.action.BasicAction;
@@ -11,8 +14,8 @@ import com.keitsen.demo.module.function.service.IFunctionService;
 import com.keitsen.demo.module.function.vo.FunctionTreeVO;
 import com.keitsen.demo.module.function.vo.FunctionVO;
 
-//@Controller
-//@Namespace("/")
+@Controller
+@Namespace("/sys/function")
 public class FunctionAction extends BasicAction<FunctionVO >{
 
 	private static final long serialVersionUID = 6220038897701201113L;

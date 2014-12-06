@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import com.keitsen.demo.basic.BasicConstants;
 import com.keitsen.demo.basic.util.PathUtil;
 import com.keitsen.demo.module.Constants;
+import com.keitsen.demo.module.user.entity.User;
 import com.keitsen.demo.module.user.service.IUserService;
 import com.keitsen.demo.module.user.vo.LoginVO;
 import com.opensymphony.xwork2.Action;
@@ -38,7 +39,7 @@ public class LoginAction extends ActionSupport {
 
 	private IUserService userService;
 
-	private LoginVO loginVO;
+	private LoginVO loginVO = new LoginVO();
 	
 	private String username;
 	
@@ -86,17 +87,13 @@ public class LoginAction extends ActionSupport {
 			return INPUT;
 		}
 
-//		if ("root".equals(getUsername()) && "root123".equals(getPassword())) {
-//			session.put(Constants.CURRENT_LOGIN_USER, getUsername());
-//			System.out.println("登陆成功,用户名为=" + getUsername());
-//			logger.info("登陆成功！！！");
-//			return SUCCESS;
-//		}
-
-		if (userService.getUserLogin(username, password) != null) {
+		User user = userService.getUserLogin(username, password);
+		if (user != null) {
+			loginVO.setLoginId(user.getId());
+			loginVO.setUsername(user.getUsername());
 			session.put(Constants.CURRENT_LOGIN_USER, getUsername());
-			System.out.println("登陆成功,用户名为=" + getUsername());
-			logger.info("登陆成功！！！");
+			session.put(Constants.CURRENT_LOGIN_VO, loginVO);
+			logger.info("登陆成功！！！,用户名为=" + getUsername());
 			return SUCCESS;
 		}
 
@@ -106,6 +103,7 @@ public class LoginAction extends ActionSupport {
 	}
 	
 	public String mainPage() throws Exception{
+		logger.info("用户进入主页面");
 		return BasicConstants.MAIN_PAGE;
 	}
 }

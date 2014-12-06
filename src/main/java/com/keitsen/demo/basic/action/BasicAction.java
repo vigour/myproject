@@ -20,10 +20,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
+import com.keitsen.demo.basic.entity.OperateResult;
 import com.keitsen.demo.basic.entity.PageModel;
 import com.keitsen.demo.basic.util.DateJsonValueProcessor;
 import com.keitsen.demo.basic.util.DateUtil;
 import com.keitsen.demo.basic.util.ReflectionUtil;
+import com.keitsen.demo.module.Constants;
+import com.keitsen.demo.module.user.vo.LoginVO;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
@@ -61,6 +64,10 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 	protected String order;	//排序的方式
 	
 	protected String sort;	//排序的字段
+	
+	protected LoginVO loginVO;//VO
+	
+	protected OperateResult result;
 	
 	@SuppressWarnings("unchecked")
 	public BasicAction(){
@@ -152,7 +159,7 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 	 */
 	public void renderPageModel(PageModel<T> page){
 		List<T> list = page.getList(); 
-		String json = "{\"total\":"+ page.getTotalRecords()+",\"rows\":"+JSONArray.fromObject(list) +"}";
+		String json = "{\"page\":"+ page.getTotalRecords()+",\"rows\":"+JSONArray.fromObject(list).toString() +"}";
 		renderString(json);
 	}
 	
@@ -170,6 +177,9 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 	}
 
 	public T getVo() {
+		if(loginVO != null){
+			
+		}
 		return vo;
 	}
 
@@ -224,6 +234,15 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 		this.sort = sort;
 		pager.setOrderField(sort);
 	}
+	
+	protected LoginVO getLoginVO() throws Exception {
+		LoginVO loginVO = (LoginVO) this.session.getAttribute(
+				Constants.CURRENT_LOGIN_VO);
+		if(loginVO == null){
+			throw new Exception("当前用户没有登录，或者登录超时 ,请重新登录");
+		}
+		return loginVO;
+	}
 
 	@Override
 	public T getModel() {
@@ -234,5 +253,13 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 		return LogFactory.getLog(this.getClass());
 	}
 
+	public OperateResult getResult() {
+		return result;
+	}
 
+	public void setResult(OperateResult result) {
+		this.result = result;
+	}
+
+	
 }

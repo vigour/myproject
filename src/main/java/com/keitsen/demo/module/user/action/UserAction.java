@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 
 import com.keitsen.demo.basic.BasicConstants;
 import com.keitsen.demo.basic.action.BasicAction;
+import com.keitsen.demo.basic.util.Struts2Util;
+import com.keitsen.demo.module.user.entity.User;
 import com.keitsen.demo.module.user.service.IUserService;
 import com.keitsen.demo.module.user.vo.UserVO;
 
@@ -50,24 +52,6 @@ public class UserAction extends BasicAction<UserVO>{
 		return null;
 	}
 	
-//	protected void writeJson(Object object){
-//		PrintWriter pw = null;
-//		try {
-//			String json = JSONArray.
-//			
-//		 	response.setContentType("textml;charset=utf-8");
-//			pw = response.getWriter();
-//			pw.write(json);
-//			pw.flush();
-//		} catch (Exception e) {
-//			throw new Exception("信息返回出错!");
-//		}
-//		finally{
-//			if(pw != null){
-//				pw.close();
-//			}
-//		}
-//	}
 
 	
 	public String save() throws Exception{

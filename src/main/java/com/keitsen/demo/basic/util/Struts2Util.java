@@ -203,4 +203,16 @@ public class Struts2Util {
 		public static String buildPagingJson(final String json,Long totalCount) {
 			return "{totalCount:"+totalCount+",items:"+json+"}";		
 		}
+		
+		/**
+		 * 生成分页的json.
+		 * 
+		 * @param json 普通json.
+		 * @param totalCount 分页总数.
+		 * 
+		 */
+		public static String buildEasyUIPagingJson(final String json,Long totalCount) {
+			return "{\"total\":"+totalCount+",\"rows\":"+json+"}";		
+			
+		}
 }

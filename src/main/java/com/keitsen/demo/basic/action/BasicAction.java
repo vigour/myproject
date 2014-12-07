@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -158,8 +157,10 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 	 * @param page
 	 */
 	public void renderPageModel(PageModel<T> page){
-		List<T> list = page.getList(); 
-		String json = "{\"page\":"+ page.getTotalRecords()+",\"rows\":"+JSONArray.fromObject(list).toString() +"}";
+		//此处需要去除自调用的属性
+		JsonConfig jsonConfig = new JsonConfig();  
+	    jsonConfig.setExcludes(new String[] { "module" });
+		String json = "{\"total\":"+ page.getTotalRecords()+",\"rows\":"+JSONArray.fromObject(page.getList(),jsonConfig).toString() +"}";
 		renderString(json);
 	}
 	

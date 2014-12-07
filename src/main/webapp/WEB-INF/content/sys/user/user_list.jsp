@@ -100,9 +100,11 @@
 		
 		$('#submit').click(function(){
 			if($('#userform').form('validate')){
+				var url = flag=='add'?'${ctx}/sys/user/user!save.action':'${ctx}/sys/user/user!update.action';
+
 				$.ajax({
 					type : post,
-					url	: flag=='add'?'${ctx}/sys/user/user!save.action':'${ctx}/sys/user/user!update.action',
+					url	: url,
 					cache : false,
 					data:$('#userform').seriralize(),	//调用自定义的序列化表单
 					dataType : 'json',

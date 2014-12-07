@@ -18,4 +18,8 @@ public interface IUserService extends IBasicService<User, String>{
 	PageModel<UserVO> getAllUserPage(PageModel<UserVO> page);
 	
 	void createUser(UserVO uservo);
+	
+	void modifierUser(UserVO uservo);
+	
+	void deleteByIds(String[] ids);
 }

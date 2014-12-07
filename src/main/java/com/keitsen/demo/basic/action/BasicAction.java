@@ -66,7 +66,7 @@ public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Pre
 	
 	protected LoginVO loginVO;//VO
 	
-	protected OperateResult result;
+	protected OperateResult result = new OperateResult();
 	
 	@SuppressWarnings("unchecked")
 	public BasicAction(){

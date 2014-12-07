@@ -1,11 +1,13 @@
 package com.keitsen.demo.module.user.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,6 +94,46 @@ public class UserServiceImpl extends BasicService<User, String> implements IUser
 		user = (User) uservo.getModule();
 		this.save(user);
 		
+	}
+
+
+	/**
+	 * 修改用户
+	 */
+	@Override
+	public void modifierUser(UserVO uservo) {
+		User user = this.get(uservo.getId());
+		if(user != null){
+			user.setId(uservo.getId());
+			user.setUsername(uservo.getUsername());
+			user.setPassword(uservo.getPassword());
+			user.setVisible(uservo.isVisible());
+			user.setStatus(uservo.getStatus());
+			user.setModificationDate(new Date());
+			user.setRemark(uservo.getRemark());
+			if(StringUtils.isBlank(user.getId())){
+				User creator = new User();
+				creator.setId(uservo.getCreatorId());
+				user.setCreator(creator);
+				user.setCreationDate(new Date());
+			}else{
+				User modifier = new User();
+				modifier.setId(uservo.getModifierId());
+				user.setModifier(modifier);
+				user.setModificationDate(new Date());
+			}
+			this.userDao.update(user);
+		}
+	}
+
+
+	@Override
+	public void deleteByIds(String[] ids) {
+		if(ids.length <= 0){
+			return;
+		}
+System.out.println(ids[0]);		
+		this.userDao.deleteArray(ids);
 	}
 
 

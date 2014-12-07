@@ -1,32 +1,22 @@
 package com.keitsen.demo.module.user.action;
 
-import java.io.PrintWriter;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
 import com.keitsen.demo.basic.BasicConstants;
 import com.keitsen.demo.basic.action.BasicAction;
-import com.keitsen.demo.basic.util.Struts2Util;
-import com.keitsen.demo.module.user.entity.User;
 import com.keitsen.demo.module.user.service.IUserService;
 import com.keitsen.demo.module.user.vo.UserVO;
 
 @Controller
 @Namespace("/sys/user")
 @Results({ 
-	@Result(name = BasicConstants.MODULE_LIST, location = "user_list.jsp") ,
-	}
-	)
+	})
 public class UserAction extends BasicAction<UserVO>{
 
 	private static final long serialVersionUID = 2868562624590504086L;
@@ -54,14 +44,43 @@ public class UserAction extends BasicAction<UserVO>{
 	
 
 	
-	public String save() throws Exception{
+	public String addUser() throws Exception{
 		getLog().info("保存新增的用户信息");
 		vo.setCreatorId(getLoginVO().getLoginId());
 		vo.setCreationDate(new Date());
 		this.userService.createUser(vo);
+		result.setStatus("ok");
 		result.setType(BasicConstants.RESULT_TYPE_SUCCESS);
 		result.setMessage(BasicConstants.CREATE_SUCCESS_MESSAGE);
 		renderJson(result.toJsonString());
 		return null;
 	}
+	
+	
+	
+	public String updateUser() throws Exception{
+		getLog().info("保存修改的用户信息");
+		vo.setModifierId(getLoginVO().getLoginId());
+		vo.setModificationDate(new Date());
+		this.userService.modifierUser(vo);
+		result.setStatus("ok");
+		result.setType(BasicConstants.RESULT_TYPE_SUCCESS);
+		result.setMessage(BasicConstants.EDIT_SUCCESS_MESSAGE);
+		renderJson(result.toJsonString());
+		return null;
+	}
+	
+	public String deleteUsers() throws Exception{
+		getLog().info("删除用户信息");
+		String ids[] = request.getParameter("ids").split(",");
+		System.out.println(ids.length);
+		this.userService.deleteByIds(ids);
+		result.setStatus("ok");
+		result.setType(BasicConstants.RESULT_TYPE_SUCCESS);
+		result.setMessage(BasicConstants.DELETE_SUCCESS_MESSAGE);
+		renderJson(result.toJsonString());
+		return null;
+	}
+	
+	
 }

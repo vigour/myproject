@@ -12,7 +12,9 @@
 <script type="text/javascript">
 
 	$(function(){
-		var flag ;		//undefined 判断新增和修改方法 
+		var flag ;		//undefined 判断新增和修改方法
+
+
 		
 		$('#userlist').datagrid({
 			idField:'id',
@@ -44,13 +46,67 @@
 					text : '修改用户',
 					iconCls :'icon-edit',
 					handler:function(){
-						alert('修改用户');
+						flag = 'edit';
+						var arr = $('#userlist').datagrid('getSelections');
+						if(arr.length != 1){
+							$.messager.alert("提示信息!",'只能选择一行记录进行修改!','warning');
+						}else{
+							$('#userdialog').dialog({
+								title:'修改用户'
+							});
+							
+							//打开表单
+							$('#userdialog').dialog('open');
+
+							//清空表单
+							$('#userform').get(0).reset();
+
+							$('#userform').form('load',{
+								'vo.id' : arr[0].id,
+								'vo.username': arr[0].username,
+								'vo.password': arr[0].password,
+								'vo.visible' : arr[0].visible,
+								'vo.status'	: arr[0].status
+							})
+						}
 					}
 				},{
 					text : '删除用户',
 					iconCls :'icon-cancel',
 					handler:function(){
-						alert('删除用户');
+						var arr = $('#userlist').datagrid('getSelections');
+						if(arr.length <= 0){
+							$.messager.alert("提示信息!",'只能选择一行记录进行修改!','warning');
+						}else{
+							$.messager.confirm('提示信息' , '确认删除?' , function(btn){
+								if(btn){
+									var ids = '';
+									for(var i=0, len=arr.length; i<len; i++){
+										ids += arr[i].id+',';
+									}
+									ids = ids.substring(0, ids.length-1);
+									$.post(
+											'${ctx}/sys/user/user!deleteUsers.action',
+											{ids:ids},
+											function(result){
+												//1 刷新数据表格
+												$('#userlist').datagrid('reload');
+												//2 清空idField
+												$('#userlist').datagrid('unselectAll');
+												//3提示信息
+												$.messager.show({
+													title : result.type,
+													msg : result.message
+												})
+												 
+											})
+								}else {
+									return ;
+								}
+	
+							})	
+							
+						}
 					}
 				},{
 					text : '查询用户',
@@ -100,27 +156,27 @@
 		
 		$('#submit').click(function(){
 			if($('#userform').form('validate')){
-				var url = flag=='add'?'${ctx}/sys/user/user!save.action':'${ctx}/sys/user/user!update.action';
-
+				var url = flag=='add'?'${ctx}/sys/user/user!addUser.action':'${ctx}/sys/user/user!updateUser.action';
 				$.ajax({
-					type : post,
+					type : 'post',
 					url	: url,
 					cache : false,
-					data:$('#userform').seriralize(),	//调用自定义的序列化表单
+					data : $("#userform").serialize(),	//调用自定义的序列化表单
 					dataType : 'json',
 					success:function(result){
 						//1关闭窗口
 						$('#userdialog').dialog('close');
-						//2刷新datagrid
+						//2刷新datagrid并取消选择状态
 						$('#userlist').datagrid('reload');
+						$('#userlist').datagrid('unselectAll');
 						//3提示信息
-						$.message.show({
+						$.messager.show({
 							title : result.type,
 							msg : result.message
 						})
 					},
 					error:function(result){
-						$.message.show({
+						$.messager.show({
 							title : result.type,
 							msg : result.message
 						})
@@ -145,9 +201,9 @@
 				</tr>
 				<tr>
 					<td><s:label>是否可见</s:label></td>
-					<td><s:radio list="%{#{'true':'是','false':'否'}}" name="vo.visible" value="true" ></s:radio> </td>
+					<td><s:radio id="visible" list="%{#{'true':'是','false':'否'}}" name="vo.visible" value="true" ></s:radio> </td>
 					<td><s:label>状态</s:label></td>
-					<td><s:radio list="%{#{'1':'启用','2':'停用','3':'作废'}}" name="vo.status" value="1"></s:radio> </td>
+					<td><s:radio id="status" list="%{#{'1':'启用','2':'停用','3':'作废'}}" name="vo.status" value="1"></s:radio> </td>
 					
 				</tr>
 				<tr>

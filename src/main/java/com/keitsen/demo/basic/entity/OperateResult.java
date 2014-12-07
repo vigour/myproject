@@ -69,7 +69,7 @@ public class OperateResult {
 	}
 
 	public String toJsonString(){
-		return "\"type\":\"" + type + "\",\"message\":\"" + message + "\",\"operate\":\"" + operate +"\"";
+		return "{\"status\":\"" + status + "\",\"type\":\"" + type + "\",\"message\":\"" + message + "\",\"operate\":\"" + operate +"\"}";
 	}
 	
 	@Override

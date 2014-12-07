@@ -32,7 +32,7 @@ public class BasicConstants {
 	/**
 	 * 操作成功
 	 */
-	public static final String RESULT_TYPE_SUCCESS = "success";
+	public static final String RESULT_TYPE_SUCCESS = "操作成功";
 	
 	/**
 	 * 操作失败

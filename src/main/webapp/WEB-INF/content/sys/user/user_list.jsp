@@ -190,7 +190,7 @@
 </script>
 	<table id="userlist"></table>  
 	<s:div id="userdialog" modal="true" style="width:500px;height:300px">
-		<s:form id="userform" action="" method="post"  theme="simple">
+		<s:form id="userform" action="" method="post" >
 			<s:hidden id="userid" name="vo.id"></s:hidden>
 			<table >
 				<tr >
@@ -208,9 +208,9 @@
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<a id="submit" class="easyui-linkbutton">确定</a>
-						<a id="reset" class="easyui-linkbutton">重置</a>
-						<a id="close" class="easyui-linkbutton">关闭</a>
+						<s:a id="submit" class="easyui-linkbutton">确定</s:a>
+						<s:a id="reset" class="easyui-linkbutton">重置</s:a>
+						<s:a id="close" class="easyui-linkbutton">关闭</s:a>
 					</td>
 				</tr>
 			</table>

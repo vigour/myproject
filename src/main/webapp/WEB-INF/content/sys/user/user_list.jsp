@@ -120,7 +120,7 @@
             ]],
 		    columns:[[    
 		        {field:'username',title:'用户名'},    
-		        {field:'password',title:'名称'},
+		        {field:'password',title:'密码'},
 		        {field:'creator',title:'创建人'},
 		        {field:'visible',title:'是否可见',
 		        	formatter:function(value,rowData,rowIndex){
@@ -147,7 +147,7 @@
 						}},
 		        {field:'modifier',title:'修改人'},
 		        {field:'modificationDate',title:'修改日期'},
-		        {field:'UUIDEntity',title:'备注'}
+		        {field:'remark',title:'备注'}
 		    ]],
 		    pagination : true,
 		    pageSize : 3,
@@ -183,14 +183,22 @@
 					}
 				})
 			}
-		})
+		});
+		
+		$('#reset').click(function(){
+			$('#userform').form('reset');
+		});
+		
+		$('#close').click(function(){
+			$('#userdialog').dialog('close');
+		});
 		
 	})
   
 </script>
 	<table id="userlist"></table>  
 	<s:div id="userdialog" modal="true" style="width:500px;height:300px">
-		<s:form id="userform" action="" method="post" >
+		<s:form id="userform" class="easyui-form" action="" method="post" >
 			<s:hidden id="userid" name="vo.id"></s:hidden>
 			<table >
 				<tr >
@@ -208,9 +216,9 @@
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<s:a id="submit" class="easyui-linkbutton">确定</s:a>
-						<s:a id="reset" class="easyui-linkbutton">重置</s:a>
-						<s:a id="close" class="easyui-linkbutton">关闭</s:a>
+						<a id="submit" class="easyui-linkbutton">确定</a>
+						<a id="reset" class="easyui-linkbutton">重置</a>
+						<a id="close" class="easyui-linkbutton">关闭</a>
 					</td>
 				</tr>
 			</table>

@@ -220,12 +220,22 @@ public class Function extends UUIDEntity implements Module {
 		vo.setLeafId(leafId);
 		vo.setLevel(level);
 		vo.setShowOrder(showOrder);
-		vo.setParentFunction(parentFunction.getId());
-		vo.setCreator(getCreator().getUsername());
+		if(parentFunction != null){
+			vo.setParentFunction(parentFunction.getId());
+			vo.setParentFunctionName(parentFunction.getFunctionName());
+		}
+		if(creator!=null){
+			vo.setCreator(creator.getUsername());
+			vo.setCreatorId(creator.getId());
+		}
 		vo.setCreationDate(getCreationDate());
-		vo.setModifier(getModifier().getUsername());
+		if(modifier!=null){
+			vo.setModifier(modifier.getUsername());
+			vo.setModifierId(modifier.getId());
+		}		
 		vo.setModificationDate(getModificationDate());
 		vo.setRemark(getRemark());
+		vo.setVisible(this.isVisible());
 		vo.setStatus(getStatus());
 		return vo;
 	}

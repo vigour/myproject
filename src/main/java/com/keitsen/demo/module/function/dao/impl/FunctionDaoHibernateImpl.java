@@ -14,4 +14,5 @@ public class FunctionDaoHibernateImpl extends HibernateBasicDao<Function, String
 	public List<Function> getChildrenFunction(String id){
 		return this.find(" from Function o where o.parentFunction.id=?", id);
 	}
+
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 
 import net.sf.json.JSONArray;
 
+import com.keitsen.demo.basic.BasicConstants;
 import com.keitsen.demo.basic.action.BasicAction;
 import com.keitsen.demo.module.function.service.IFunctionService;
 import com.keitsen.demo.module.function.vo.FunctionTreeVO;
@@ -40,11 +41,39 @@ public class FunctionAction extends BasicAction<FunctionVO >{
 	}
 
 
-
+	/**
+	 * 功能列表
+	 */
+	public String execute() throws Exception {
+		getLog().info("进入功能模块列表");
+		return BasicConstants.MODULE_LIST;
+	}
 	
+	
+	/**
+	 * 功能列表树
+	 * @return
+	 * @throws Exception
+	 */
 	public String getFunctionTree() throws Exception{
 		List<FunctionTreeVO> functionTree = this.functionService.getFunctionTreeByParentId(getId());
 		renderString(JSONArray .fromObject(functionTree).toString());
 		return null;				
 	}
+	
+	
+	/**
+	 * 获取子功能列表
+	 * @return
+	 * @throws Exception
+	 */
+	public String getChildFunction() throws Exception{
+		getLog().info("分页获取当前数据库功能模块信息");
+		pager = functionService.getChildFunction(pager,id);
+		
+		getLog().info(pager.getTotalRecords());
+		renderPageModel(pager);
+		return null;
+	}
+	
 }

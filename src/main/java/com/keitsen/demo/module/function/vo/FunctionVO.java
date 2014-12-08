@@ -6,6 +6,7 @@ import java.util.List;
 import com.keitsen.demo.basic.entity.Module;
 import com.keitsen.demo.basic.vo.UUIDEntityVO;
 import com.keitsen.demo.basic.vo.VO;
+import com.keitsen.demo.module.function.entity.Function;
 
 public class FunctionVO extends UUIDEntityVO implements VO {
 
@@ -129,6 +130,9 @@ public class FunctionVO extends UUIDEntityVO implements VO {
 	@Override
 	public Module getModule() {
 		// TODO Auto-generated method stub
+		Function function = new Function();
+		function.setId(this.getId());
+		
 		return null;
 	}
 

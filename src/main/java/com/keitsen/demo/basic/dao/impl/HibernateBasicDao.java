@@ -292,6 +292,15 @@ public abstract  class HibernateBasicDao<M extends Serializable, PK extends Seri
         // 查询，返回list
         return (List<M>) query.list();
     }
+	
+	/**
+	 * 根据HQL语句分页
+	 */
+	public  List<M>  findResultList(String whereJpql,
+			int firstResult, int maxResult){
+		return this.findResultList(null, null, null, null,
+                null, whereJpql, firstResult, maxResult);
+	}
 
 
     //获取pageModel
@@ -368,6 +377,7 @@ public abstract  class HibernateBasicDao<M extends Serializable, PK extends Seri
                 orderByFields, null, pageModel);
     }
 
+	
     
     /***
      * QBC查询程序段

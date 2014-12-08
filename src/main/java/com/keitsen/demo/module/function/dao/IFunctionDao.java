@@ -11,4 +11,5 @@ public interface IFunctionDao extends IBasicDao<Function, String>{
 	final static String DAO_NAME = "functionDao";
 	
 	List<Function> getChildrenFunction(String id);
+
 }

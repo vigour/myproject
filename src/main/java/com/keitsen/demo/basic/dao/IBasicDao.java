@@ -102,6 +102,9 @@ public interface IBasicDao<M extends Serializable, PK extends Serializable> {
 			LinkedHashMap<String, String> nullFields,
 			LinkedHashMap<String, String> orderByFields, String whereJpql,
 			int firstResult, int maxResult);
+	
+	public  List<M> findResultList(String whereJpql,
+			int firstResult, int maxResult);
 
 	// 获取pageModel
 	public PageModel<M> findPage(PageModel<M> page);
@@ -127,5 +130,5 @@ public interface IBasicDao<M extends Serializable, PK extends Serializable> {
 			LinkedHashMap<Object, Object> equalFields,
 			LinkedHashMap<String, String> likeFields,
 			LinkedHashMap<String, String> orderByFields, PageModel<M> pageModel);
-
+	
 }

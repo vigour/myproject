@@ -132,7 +132,6 @@ public class UserServiceImpl extends BasicService<User, String> implements IUser
 		if(ids.length <= 0){
 			return;
 		}
-System.out.println(ids[0]);		
 		this.userDao.deleteArray(ids);
 	}
 

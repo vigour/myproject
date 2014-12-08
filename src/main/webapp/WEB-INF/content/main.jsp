@@ -65,7 +65,6 @@
 	        
 	        $(".tabs li").each(function(i, n){
 	            var title = $(n).text();
-	            alert(title);
 	            if(currTitle != title && title != '首页'){//需要保留首页
 	                $('#centerPenel').tabs('close',title);            
 	            }

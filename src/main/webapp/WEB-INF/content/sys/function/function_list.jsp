@@ -13,6 +13,9 @@
 	$(function(){
 		var flag ;		//undefined 判断新增和修改方法
 		
+		$('#showOrder').numberbox({
+			precision : 0
+		});
 		
 		//左边的树
 		$('#functionWestTree').tree({
@@ -22,6 +25,28 @@
 				$('#functionlist').datagrid('reload',{id : id});
 			}
 		});
+		
+		
+		//选择的树
+		$('#parentFunction').combotree({
+			url : '${ctx}/sys/function/function!getFunctionTree.action',
+			valueField : 'id',  
+	        textField : 'text',  
+	        required : true,  
+	        editable : false,
+			multiple:false,
+			onLoadSuccess : function(node, data) {  
+	            var t = $(this);  
+	            if (data) {  
+	                $(data).each(function(index, d) {  
+	                    if (this.state == 'closed') {  
+	                        t.tree('expandAll');  
+	                    }  
+	                });  
+	            }  
+	        }  
+		});
+		
 		//右边的grid
 		$('#functionlist').datagrid({
 			idField : 'id',
@@ -44,9 +69,28 @@
 									title:'新增功能'
 								});
 								//清空表单
-								$('#userform').get(0).reset();
+								$('#functionform').get(0).reset();
+								
+								//获取选中的值
+								var node = $('#functionWestTree').tree('getSelected');
+
+								var root =  $('#functionWestTree').tree('getRoot');
+								var selectNode = $('#parentFunction').combotree('tree').tree('find',node.id);
+							console.log(root);
+							console.log(selectNode);
+								
+								if(selectNode == null){
+									$('#parentFunction').combotree('setValue',root.id);
+									$('#parentFunction').combotree('tree').tree('select',root.target);
+								}else{
+									//初始化表单数据
+									$('#parentFunction').combotree('setValue',node.id);
+								
+									$('#parentFunction').combotree('tree').tree('select',selectNode.target);
+								}
+								
 								//显示表单
-								$('#userdialog').dialog('open');
+								$('#functiondialog').dialog('open');
 
 							}
 						},{
@@ -121,8 +165,8 @@
 		            ]],
 				    columns:[[    
 				        {field:'functionName',title:'模块名称'},    
-				        {field:'url',title:'url'},
-				        {field:'icon',title:'icon'},
+				        {field:'url',title:'URL'},
+				        {field:'icon',title:'图标'},
 				        {field:'parentFunctionName',title:'父模块名称'},
 				        {field:'visible',title:'是否可见',
 				        	formatter:function(value,rowData,rowIndex){
@@ -155,6 +199,38 @@
 				    pageList:[3,6,9,12,15]
 		});
 		
+		$('#submit').click(function(){
+console.info($("#functionform").serialize());
+			if($('#functionform').form('validate')){
+				var url = flag=='add'?'${ctx}/sys/function/function!addFunction.action':'${ctx}/sys/function/function!updateFunction.action';
+				$.ajax({
+					type : 'post',
+					url	: url,
+					cache : false,
+					data : $("#functionform").serialize(),	//调用自定义的序列化表单
+					dataType : 'json',
+					success:function(result){
+						//1关闭窗口
+						$('#functiondialog').dialog('close');
+						//2刷新datagrid并取消选择状态
+						$('#functionlist').datagrid('reload');
+						$('#functionlist').datagrid('unselectAll');
+						//3提示信息
+						$.messager.show({
+							title : result.type,
+							msg : result.message
+						})
+					},
+					error:function(result){
+						$.messager.show({
+							title : result.type,
+							msg : result.message
+						})
+					}
+				})
+			}
+		});
+		
 
 	});
 		
@@ -167,21 +243,31 @@
 	    	 <table id="functionlist"></table>  
 	    </div>
 	</div>
-	<s:div id="functiondialog" modal="true" style="width:500px;height:300px">
+	<s:div id="functiondialog"  modal="true" style="width:500px;height:300px">
 		<s:form id="functionform" class="easyui-form" action="" method="post" >
 			<s:hidden id="functionid" name="vo.id"></s:hidden>
 			<table >
 				<tr >
 					<td><s:label>模块名称</s:label></td>
-					<td><s:textfield id="functionname" name="vo.functionname" class="easyui-validatebox" required="true"></s:textfield></td>
-					<td><s:label>密码</s:label></td>
-					<td><s:password id="password" name="vo.password" class="easyui-validatebox" required="true"></s:password></td>
+					<td><s:textfield id="functionname" name="vo.functionName" class="easyui-validatebox"  required="true"></s:textfield></td>
+					<td><s:label>图标</s:label></td>
+					<td><s:textfield id="icon" name="vo.icon" class="easyui-validatebox" required="true"></s:textfield></td>
+				</tr>
+				<tr >
+					<td><s:label>URL</s:label></td>
+					<td><s:textfield id="url" name="vo.url" class="easyui-validatebox" required="true"></s:textfield></td>
+					<td><s:label>显示顺序</s:label></td>
+					<td><s:textfield id="showOrder" name="vo.showOrder" class="easyui-validatebox" required="true"></s:textfield></td>
+				</tr>
+				<tr >
+					<td><s:label>父模块</s:label></td>
+					<td><select required="true" id="parentFunction" name="vo.parentFunction" style="width:100%" class="easyui-combotree" ></select></td>
 				</tr>
 				<tr>
 					<td><s:label>是否可见</s:label></td>
-					<td><s:radio id="visible" list="%{#{'true':'是','false':'否'}}" name="vo.visible" value="true" ></s:radio> </td>
+					<td><s:radio id="visible" list="%{ #{'true':'是','false':'否'}}" name="vo.visible" value="true" ></s:radio> </td>
 					<td><s:label>状态</s:label></td>
-					<td><s:radio id="status" list="%{#{'1':'启用','2':'停用','3':'作废'}}" name="vo.status" value="1"></s:radio> </td>
+					<td><s:radio id="status" list="%{ #{'1':'启用','2':'停用','3':'作废'}}" name="vo.status" value="1"></s:radio> </td>
 					
 				</tr>
 				<tr>

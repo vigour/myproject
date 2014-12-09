@@ -39,7 +39,7 @@ import com.opensymphony.xwork2.Preparable;
  * 
  * @author  
  */
-public class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Preparable, ServletRequestAware, ServletResponseAware{
+public abstract class BasicAction<T> extends ActionSupport implements ModelDriven<T>, Preparable, ServletRequestAware, ServletResponseAware{
 
 	private static final long serialVersionUID = 521973244692611994L;
 

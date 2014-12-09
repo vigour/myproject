@@ -79,4 +79,16 @@ public class FunctionServiceImpl extends BasicService<Function, String>
 		return pager;
 	}
 
+	
+	/**
+	 * 新建模块
+	 */
+	@Override
+	public void createFunction(FunctionVO vo) {
+		// TODO Auto-generated method stub
+		Function entity = (Function) vo.getModule();
+		this.save(entity);
+		
+	}
+
 }

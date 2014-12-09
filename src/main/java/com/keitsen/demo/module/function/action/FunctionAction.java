@@ -1,5 +1,6 @@
 package com.keitsen.demo.module.function.action;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -47,6 +48,19 @@ public class FunctionAction extends BasicAction<FunctionVO >{
 	public String execute() throws Exception {
 		getLog().info("进入功能模块列表");
 		return BasicConstants.MODULE_LIST;
+	}
+	
+	
+	public String addFunction() throws Exception{
+		getLog().info("保存新增的模块信息");
+		vo.setCreatorId(getLoginVO().getLoginId());
+		vo.setCreationDate(new Date());
+		this.functionService.createFunction(vo);
+		result.setStatus("ok");
+		result.setType(BasicConstants.RESULT_TYPE_SUCCESS);
+		result.setMessage(BasicConstants.CREATE_SUCCESS_MESSAGE);
+		renderJson(result.toJsonString());
+		return null;
 	}
 	
 	

@@ -44,26 +44,28 @@ public class UserVO extends UUIDEntityVO implements VO{
 
 	@Override
 	public Module getModule() {
-		User user = new User();
-		user.setId(this.getId());
-		user.setUsername(username);
-		user.setPassword(password);
-		user.setVisible(isVisible());
-		user.setStatus(getStatus());
-		user.setModificationDate(new Date());
-		user.setRemark(getRemark());
-		if(StringUtils.isBlank(user.getId())){
+		User model = new User();
+		model.setId(this.getId());
+		model.setUsername(username);
+		model.setPassword(password);
+		
+		model.setVisible(isVisible());
+		model.setStatus(getStatus());
+		model.setModificationDate(new Date());
+		model.setRemark(getRemark());
+		
+		if(StringUtils.isBlank(model.getId())){
 			User creator = new User();
 			creator.setId(getCreatorId());
-			user.setCreator(creator);
-			user.setCreationDate(new Date());
+			model.setCreator(creator);
+			model.setCreationDate(new Date());
 		}else{
 			User modifier = new User();
 			modifier.setId(getModifierId());
-			user.setModifier(modifier);
-			user.setModificationDate(new Date());
+			model.setModifier(modifier);
+			model.setModificationDate(new Date());
 		}
-		return user;
+		return model;
 	}
 	
 

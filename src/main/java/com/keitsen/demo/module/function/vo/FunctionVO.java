@@ -1,12 +1,16 @@
 package com.keitsen.demo.module.function.vo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.keitsen.demo.basic.entity.Module;
 import com.keitsen.demo.basic.vo.UUIDEntityVO;
 import com.keitsen.demo.basic.vo.VO;
 import com.keitsen.demo.module.function.entity.Function;
+import com.keitsen.demo.module.user.entity.User;
 
 public class FunctionVO extends UUIDEntityVO implements VO {
 
@@ -130,10 +134,37 @@ public class FunctionVO extends UUIDEntityVO implements VO {
 	@Override
 	public Module getModule() {
 		// TODO Auto-generated method stub
-		Function function = new Function();
-		function.setId(this.getId());
+		Function model = new Function();
+		model.setId(this.getId());
+		model.setFunctionName(functionName);
+		model.setUrl(url);
+		model.setIcon(icon);
+		model.setShowOrder(showOrder);
+
+		model.setVisible(isVisible());
+		model.setStatus(getStatus());
+		model.setModificationDate(new Date());
+		model.setRemark(getRemark());
 		
-		return null;
+		if(StringUtils.isBlank(model.getId())){
+			User creator = new User();
+			creator.setId(getCreatorId());
+			model.setCreator(creator);
+			model.setCreationDate(new Date());
+		}else{
+			User modifier = new User();
+			modifier.setId(getModifierId());
+			model.setModifier(modifier);
+			model.setModificationDate(new Date());
+		}
+		
+		
+		if(StringUtils.isBlank(parentFunction)){
+			Function parent = new Function();
+			parent.setId(parentFunction);
+			model.setParentFunction(parent);
+		}
+		return model;
 	}
 
 }

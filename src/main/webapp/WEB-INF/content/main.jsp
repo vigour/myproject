@@ -12,6 +12,7 @@
 		
 		$('#functionTree').tree({
 			url : 'sys/function/function!getFunctionTree.action',
+			
 			onClick: function(node){
 				var title = node.text;
 				var url = node.url;

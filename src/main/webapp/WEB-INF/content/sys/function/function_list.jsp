@@ -34,17 +34,7 @@
 	        textField : 'text',  
 	        required : true,  
 	        editable : false,
-			multiple:false,
-			onLoadSuccess : function(node, data) {  
-	            var t = $(this);  
-	            if (data) {  
-	                $(data).each(function(index, d) {  
-	                    if (this.state == 'closed') {  
-	                        t.tree('expandAll');  
-	                    }  
-	                });  
-	            }  
-	        }  
+			multiple:false
 		});
 		
 		//右边的grid
@@ -71,24 +61,6 @@
 								//清空表单
 								$('#functionform').get(0).reset();
 								
-								//获取选中的值
-								var node = $('#functionWestTree').tree('getSelected');
-
-								var root =  $('#functionWestTree').tree('getRoot');
-								var selectNode = $('#parentFunction').combotree('tree').tree('find',node.id);
-							console.log(root);
-							console.log(selectNode);
-								
-								if(selectNode == null){
-									$('#parentFunction').combotree('setValue',root.id);
-									$('#parentFunction').combotree('tree').tree('select',root.target);
-								}else{
-									//初始化表单数据
-									$('#parentFunction').combotree('setValue',node.id);
-								
-									$('#parentFunction').combotree('tree').tree('select',selectNode.target);
-								}
-								
 								//显示表单
 								$('#functiondialog').dialog('open');
 
@@ -97,29 +69,35 @@
 							text : '修改功能',
 							iconCls :'icon-edit',
 							handler:function(){
-// 								flag = 'edit';
-// 								var arr = $('#userlist').datagrid('getSelections');
-// 								if(arr.length != 1){
-// 									$.messager.alert("提示信息!",'只能选择一行记录进行修改!','warning');
-// 								}else{
-// 									$('#userdialog').dialog({
-// 										title:'修改用户'
-// 									});
+								flag = 'edit';
+								var arr = $('#functionlist').datagrid('getSelections');
+								if(arr.length != 1){
+									$.messager.alert("提示信息!",'只能选择一行记录进行修改!','warning');
+								}else{
+									$('#functiondialog').dialog({
+										title:'修改功能'
+									});
 									
-// 									//打开表单
-// 									$('#userdialog').dialog('open');
+									//打开表单
+									$('#functiondialog').dialog('open');
 
-// 									//清空表单
-// 									$('#userform').get(0).reset();
+									//清空表单
+									$('#functionform').get(0).reset();
 
-// 									$('#userform').form('load',{
-// 										'vo.id' : arr[0].id,
-// 										'vo.username': arr[0].username,
-// 										'vo.password': arr[0].password,
-// 										'vo.visible' : arr[0].visible,
-// 										'vo.status'	: arr[0].status
-// 									})
-// 								}
+									$('#functionform').form('load',{
+										'vo.id' : arr[0].id,
+										'vo.functionName': arr[0].functionName,
+										'vo.url': arr[0].url,
+										'vo.icon': arr[0].icon,
+										'vo.showOrder': arr[0].showOrder,
+										//'vo.parentFunction': arr[0].parentFunction,
+										'vo.visible' : arr[0].visible,
+										'vo.status'	: arr[0].status
+									});
+									
+									$('#parentFunction').combotree('tree').tree('reload');
+									$('#parentFunction').combotree('setValue',{id: arr[0].parentFunction});
+								}
 							}
 						},{
 							text : '删除功能',
@@ -200,7 +178,6 @@
 		});
 		
 		$('#submit').click(function(){
-console.info($("#functionform").serialize());
 			if($('#functionform').form('validate')){
 				var url = flag=='add'?'${ctx}/sys/function/function!addFunction.action':'${ctx}/sys/function/function!updateFunction.action';
 				$.ajax({

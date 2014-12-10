@@ -178,9 +178,6 @@ public abstract class BasicAction<T> extends ActionSupport implements ModelDrive
 	}
 
 	public T getVo() {
-		if(loginVO != null){
-			
-		}
 		return vo;
 	}
 

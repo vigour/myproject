@@ -5,10 +5,11 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.struts2.convention.annotation.Namespace;
-import org.springframework.stereotype.Controller;
-
 import net.sf.json.JSONArray;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Results;
+import org.springframework.stereotype.Controller;
 
 import com.keitsen.demo.basic.BasicConstants;
 import com.keitsen.demo.basic.action.BasicAction;
@@ -18,6 +19,8 @@ import com.keitsen.demo.module.function.vo.FunctionVO;
 
 @Controller
 @Namespace("/sys/function")
+@Results({ 
+})
 public class FunctionAction extends BasicAction<FunctionVO >{
 
 	private static final long serialVersionUID = 6220038897701201113L;

@@ -159,11 +159,7 @@ public class FunctionVO extends UUIDEntityVO implements VO {
 		}
 		
 		
-		if(StringUtils.isBlank(parentFunction)){
-			Function parent = new Function();
-			parent.setId(parentFunction);
-			model.setParentFunction(parent);
-		}
+		
 		return model;
 	}
 

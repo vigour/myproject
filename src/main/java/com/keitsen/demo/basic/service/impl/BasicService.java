@@ -12,13 +12,14 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.keitsen.demo.basic.dao.IBasicDao;
 import com.keitsen.demo.basic.entity.PageModel;
 import com.keitsen.demo.basic.service.IBasicService;
 import com.keitsen.demo.basic.util.ReflectionUtil;
-
-public  class BasicService <M extends Serializable, PK extends Serializable> implements IBasicService<M, PK>{
+@Transactional(rollbackFor = Exception.class)
+public abstract  class BasicService <M extends Serializable, PK extends Serializable> implements IBasicService<M, PK>{
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -42,6 +43,7 @@ public  class BasicService <M extends Serializable, PK extends Serializable> imp
 								.substring(
 										entityClassName.lastIndexOf(".") + 1,
 										entityClassName.length()) + "Dao";
+				
 				try {
 					Method method = this.getClass().getMethod(getMethodName);
 					if(method != null){

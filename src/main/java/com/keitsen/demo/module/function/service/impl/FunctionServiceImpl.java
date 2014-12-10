@@ -3,10 +3,12 @@ package com.keitsen.demo.module.function.service.impl;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.keitsen.demo.basic.BasicConstants;
 import com.keitsen.demo.basic.entity.PageModel;
@@ -18,6 +20,7 @@ import com.keitsen.demo.module.function.vo.FunctionTreeVO;
 import com.keitsen.demo.module.function.vo.FunctionVO;
 
 @Service(IFunctionService.SERVICE_NAME)
+@Transactional(rollbackFor = Exception.class)
 public class FunctionServiceImpl extends BasicService<Function, String>
 		implements IFunctionService {
 
@@ -86,9 +89,18 @@ public class FunctionServiceImpl extends BasicService<Function, String>
 	@Override
 	public void createFunction(FunctionVO vo) {
 		// TODO Auto-generated method stub
-		Function entity = (Function) vo.getModule();
-		this.save(entity);
+		Function entity = new Function();
+		entity = (Function) vo.getModule();
 		
+		//一对多双向关系维护
+		Function parent = this.get(vo.getParentFunction());
+		entity.setParentFunction(parent);
+		
+		Set<Function> children = parent.getChildFunction();
+		children.add(entity);
+		parent.setChildFunction(children);
+		
+		this.save(entity);
 	}
 
 }

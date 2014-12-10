@@ -34,7 +34,17 @@
 	        textField : 'text',  
 	        required : true,  
 	        editable : false,
-			multiple:false
+			multiple:false,
+			onLoadSuccess : function(node, data) {  
+	            var t = $(this);  
+	            if (data) {  
+	                $(data).each(function(index, d) {  
+	                    if (this.state == 'closed') {
+	                        t.tree('expandAll',d.target);  
+	                    }  
+	                });  
+	            }  
+	        }  
 		});
 		
 		//右边的grid
@@ -60,7 +70,11 @@
 								});
 								//清空表单
 								$('#functionform').get(0).reset();
-								
+
+								var node = $('#functionWestTree').tree('getSelected');
+								var selectnode = $('#parentFunction').combotree('tree').tree('find',node.id);
+								$('#parentFunction').combotree('tree').tree('select',selectnode.target);
+								$('#parentFunction').combotree('setValue',node.id);
 								//显示表单
 								$('#functiondialog').dialog('open');
 

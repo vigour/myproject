@@ -24,7 +24,8 @@ import com.keitsen.demo.basic.entity.UUIDEntity;
 import com.keitsen.demo.basic.vo.VO;
 
 /**
- * 按照中国行政区域划分：省/直辖市(LV1)--市/自治县/自治州(LV2)--区/县(LV3)
+ * 按照中国行政区域划分：省/直辖市(LV1)--市/自治县/自治州(LV2)--区/县(LV3)--街道/镇/乡(LV4)--社区/居委会/村委会(LV5)
+ * 
  * 
  * @author Miles XP
  *

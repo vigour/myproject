@@ -21,5 +21,4 @@ public interface IUserService extends IBasicService<User, String>{
 	
 	void modifierUser(UserVO uservo);
 	
-	void deleteByIds(String[] ids);
 }

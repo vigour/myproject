@@ -11,6 +11,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.keitsen.demo.basic.entity.Module;
 import com.keitsen.demo.basic.entity.UUIDEntity;
 import com.keitsen.demo.basic.vo.VO;
+import com.keitsen.demo.module.domain.vo.RegionVO;
 
 /**
  * 区域
@@ -85,7 +86,26 @@ public class Region extends UUIDEntity implements Module {
 	@Override
 	@Transient
 	public VO getVO() {
-		return null;
+		RegionVO vo = new RegionVO();
+		vo.setId(this.getId());
+		vo.setRegionName(regionName);
+		vo.setRegionCode(regionCode);
+		vo.setShortName(shortName);
+		vo.setDescription(description);
+		vo.setStatus(this.getStatus());
+		vo.setVisible(this.isVisible());
+		if(creator!=null){
+			vo.setCreator(creator.getUsername());
+			vo.setCreatorId(creator.getId());
+		}
+		vo.setCreationDate(getCreationDate());
+		if(modifier!=null){
+			vo.setModifier(modifier.getUsername());
+			vo.setModifierId(modifier.getId());
+		}
+		vo.setModificationDate(getModificationDate());
+		vo.setRemark(getRemark());
+		return vo;
 	}
 
 }

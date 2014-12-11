@@ -67,18 +67,24 @@ public class UserServiceImpl extends BasicService<User, String> implements IUser
 		return voList;
 	}
 
-
-	@Override
-	public PageModel<UserVO> getAllUserPage(PageModel<UserVO> page) {
+	
+	private List<UserVO> encapsulationListVO(List<User> users){
 		List<UserVO> userVOs = new ArrayList<UserVO>();
-		List<User> pageUser =  
-				this.userDao.findResultList(null,null,null,null,null,null,page.getFistResult(),page.getMaxResults());
-		for(User u: pageUser){
+		for(User u: users){
 			UserVO vo = new UserVO();
 			vo = (UserVO) u.getVO();
 			userVOs.add(vo); 
 		}
-		page.setList(userVOs);
+		return userVOs;
+	}
+
+	@Override
+	public PageModel<UserVO> getAllUserPage(PageModel<UserVO> page) {
+		
+		List<User> pageUser =  
+				this.userDao.findResultList(null,null,null,null,null,null,page.getFistResult(),page.getMaxResults());
+		//将List<module> 转为List<VO>
+		page.setList(encapsulationListVO(pageUser));
 		page.setTotalRecords(this.userDao.getTotalCount(null, null, null, null, null));
 		
 		return page;
@@ -126,14 +132,6 @@ public class UserServiceImpl extends BasicService<User, String> implements IUser
 		}
 	}
 
-
-	@Override
-	public void deleteByIds(String[] ids) {
-		if(ids.length <= 0){
-			return;
-		}
-		this.userDao.deleteArray(ids);
-	}
 
 
 

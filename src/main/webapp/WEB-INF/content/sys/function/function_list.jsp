@@ -23,6 +23,7 @@
 			onClick: function(node){
 				var id = node.id;
 				$('#functionlist').datagrid('reload',{id : id});
+				$('#functionlist').datagrid('unselectAll');
 			}
 		});
 		
@@ -35,16 +36,17 @@
 	        required : true,  
 	        editable : false,
 			multiple:false,
-			onLoadSuccess : function(node, data) {  
-	            var t = $(this);  
-	            if (data) {  
-	                $(data).each(function(index, d) {  
-	                    if (this.state == 'closed') {
-	                        t.tree('expandAll',d.target);  
-	                    }  
-	                });  
-	            }  
-	        }  
+			onLoadSuccess : function(node, data) {
+				 var t = $(this);  
+           
+		            if (data) {  
+		                $(data).each(function(index, d) {  
+		                    if (this.state == 'closed') {
+		                        t.tree('expandAll',d.target);  
+		                    }  
+		                });  
+		            }  
+		        }  
 		});
 		
 		//右边的grid
@@ -70,11 +72,20 @@
 								});
 								//清空表单
 								$('#functionform').get(0).reset();
-
-								var node = $('#functionWestTree').tree('getSelected');
-								var selectnode = $('#parentFunction').combotree('tree').tree('find',node.id);
-								$('#parentFunction').combotree('tree').tree('select',selectnode.target);
-								$('#parentFunction').combotree('setValue',node.id);
+									
+								//var node = $('#functionWestTree').tree('getSelected');
+								
+							//console.log(node.id);
+// 								var url = '${ctx}/sys/function/function!getFunctionTree.action'
+								
+								//$('#parentFunction').combotree('reload');
+								
+// 								var selectnode = $('#parentFunction').combotree('tree').tree('find',node.id);
+								
+// 								$('#parentFunction').combotree('tree').tree('select',selectnode.target);
+								
+								//$('#parentFunction').combotree('setValue',node.id);
+								$('#parentFunction').combotree('tree').tree('reload');
 								//显示表单
 								$('#functiondialog').dialog('open');
 
@@ -117,39 +128,42 @@
 							text : '删除功能',
 							iconCls :'icon-cancel',
 							handler:function(){
-// 								var arr = $('#userlist').datagrid('getSelections');
-// 								if(arr.length <= 0){
-// 									$.messager.alert("提示信息!",'只能选择一行记录进行修改!','warning');
-// 								}else{
-// 									$.messager.confirm('提示信息' , '确认删除?' , function(btn){
-// 										if(btn){
-// 											var ids = '';
-// 											for(var i=0, len=arr.length; i<len; i++){
-// 												ids += arr[i].id+',';
-// 											}
-// 											ids = ids.substring(0, ids.length-1);
-// 											$.post(
-// 													'${ctx}/sys/user/user!deleteUsers.action',
-// 													{ids:ids},
-// 													function(result){
-// 														//1 刷新数据表格
-// 														$('#userlist').datagrid('reload');
-// 														//2 清空idField
-// 														$('#userlist').datagrid('unselectAll');
-// 														//3提示信息
-// 														$.messager.show({
-// 															title : result.type,
-// 															msg : result.message
-// 														})
+								var arr = $('#functionlist').datagrid('getSelections');
+								if(arr.length <= 0){
+									$.messager.alert("提示信息!",'至少选择一行记录进行删除!','warning');
+								}else{
+									$.messager.confirm('提示信息' , '将会删除子功能,确认删除?' , function(btn){
+										if(btn){
+											var ids = '';
+											for(var i=0, len=arr.length; i<len; i++){
+												ids += arr[i].id+',';
+											}
+											ids = ids.substring(0, ids.length-1);
+											$.post(
+													'${ctx}/sys/function/function!deleteFunction.action',
+													{ids:ids},
+													function(result){
+														
+														//1 刷新数据表格
+														$('#functionlist').datagrid('reload');
+														//2 清空idField
+														$('#functionlist').datagrid('unselectAll');
+														//3刷新左边的树
+														$('#functionWestTree').tree('reload');
+														//4提示信息
+														$.messager.show({
+															title : result.type,
+															msg : result.message
+														})
 														 
-// 													})
-// 										}else {
-// 											return ;
-// 										}
+													})
+										}else {
+											return ;
+										}
 			
-// 									})	
+									})	
 									
-// 								}
+								}
 							}
 						}],
 					frozenColumns:[[
@@ -206,6 +220,8 @@
 						//2刷新datagrid并取消选择状态
 						$('#functionlist').datagrid('reload');
 						$('#functionlist').datagrid('unselectAll');
+						//3刷新左边的树
+						$('#functionWestTree').tree('reload');
 						//3提示信息
 						$.messager.show({
 							title : result.type,
@@ -234,21 +250,21 @@
 	    	 <table id="functionlist"></table>  
 	    </div>
 	</div>
-	<s:div id="functiondialog"  modal="true" style="width:500px;height:300px">
-		<s:form id="functionform" class="easyui-form" action="" method="post" >
-			<s:hidden id="functionid" name="vo.id"></s:hidden>
+	<div id="functiondialog"  modal="true" style="width:500px;height:300px">
+		<form id="functionform" class="easyui-form" action="" method="post" >
+			<input type="hidden" id="userid" name="vo.id" />
 			<table >
 				<tr >
 					<td><s:label>模块名称</s:label></td>
-					<td><s:textfield id="functionname" name="vo.functionName" class="easyui-validatebox"  required="true"></s:textfield></td>
+					<td><input type="text" id="functionname" name="vo.functionName" class="easyui-validatebox" required="true" /></td>
 					<td><s:label>图标</s:label></td>
-					<td><s:textfield id="icon" name="vo.icon" class="easyui-validatebox" required="true"></s:textfield></td>
+					<td><input type="text" id="icon" name="vo.icon" class="easyui-validatebox" required="true"/></td>
 				</tr>
 				<tr >
 					<td><s:label>URL</s:label></td>
-					<td><s:textfield id="url" name="vo.url" class="easyui-validatebox" required="true"></s:textfield></td>
+					<td><input type="text" id="url" name="vo.url" class="easyui-validatebox" required="true"/></td>
 					<td><s:label>显示顺序</s:label></td>
-					<td><s:textfield id="showOrder" name="vo.showOrder" class="easyui-validatebox" required="true"></s:textfield></td>
+					<td><input type="text" id="showOrder" name="vo.showOrder" class="easyui-validatebox" required="true"/></td>
 				</tr>
 				<tr >
 					<td><s:label>父模块</s:label></td>
@@ -256,10 +272,16 @@
 				</tr>
 				<tr>
 					<td><s:label>是否可见</s:label></td>
-					<td><s:radio id="visible" list="%{ #{'true':'是','false':'否'}}" name="vo.visible" value="true" ></s:radio> </td>
+					<td>
+						<input type="radio" id="visible"  name="vo.visible" value="true">是
+						<input type="radio" id="visible"  name="vo.visible" value="false">否
+					</td>
 					<td><s:label>状态</s:label></td>
-					<td><s:radio id="status" list="%{ #{'1':'启用','2':'停用','3':'作废'}}" name="vo.status" value="1"></s:radio> </td>
-					
+					<td>
+						<input type="radio" id="status"  name="vo.status" value=1>启用
+						<input type="radio" id="status"  name="vo.status" value=2>停用
+						<input type="radio" id="status"  name="vo.status" value=3>作废
+					</td>
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
@@ -269,8 +291,8 @@
 					</td>
 				</tr>
 			</table>
-		</s:form>
-	</s:div>
+		</form>
+	</div>
 	
 </body>
 </html>

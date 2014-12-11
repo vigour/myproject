@@ -1,12 +1,14 @@
 package com.keitsen.demo.module.function.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import com.keitsen.demo.module.function.entity.Function;
 import com.keitsen.demo.module.function.service.IFunctionService;
 import com.keitsen.demo.module.function.vo.FunctionTreeVO;
 import com.keitsen.demo.module.function.vo.FunctionVO;
+import com.keitsen.demo.module.user.entity.User;
 
 @Service(IFunctionService.SERVICE_NAME)
 @Transactional(rollbackFor = Exception.class)
@@ -35,13 +38,15 @@ public class FunctionServiceImpl extends BasicService<Function, String>
 		this.functionDao = functionDao;
 	}
 
-	@Override
-	public List<FunctionTreeVO> getFunctionTreeByParentId(String id) {
+	
+	/**
+	 * 封装用于前台显示的树
+	 * @param functions
+	 * @return
+	 */
+	private  List<FunctionTreeVO> encapsulationTreeVO(List<Function> functions){
+		// 初始化树
 		List<FunctionTreeVO> functionTreesVO = new ArrayList<FunctionTreeVO>();
-
-		List<Function> functions = this.functionDao
-				.getChildrenFunction(id == null ? BasicConstants.TREE_ROOT_NODE_ID
-						: id);
 		for (Function function : functions) {
 			FunctionTreeVO functionTreeVO = new FunctionTreeVO();
 			functionTreeVO.setId(function.getId());
@@ -63,7 +68,25 @@ public class FunctionServiceImpl extends BasicService<Function, String>
 		}
 		return functionTreesVO;
 	}
+	
+	
+	@Override
+	public List<FunctionTreeVO> getFunctionTreeByParentId(String id) {
+		
+		List<Function> functions = this.functionDao
+				.getChildrenFunction(id == null ? BasicConstants.TREE_ROOT_NODE_ID
+						: id);
+		
+		return encapsulationTreeVO(functions);
+	}
 
+	
+	@Override
+	public List<FunctionTreeVO> getAllFunctionTree() {
+		List<Function> functions = this.functionDao.getAll();
+		return encapsulationTreeVO(functions);
+	}
+	
 	@Override
 	public PageModel<FunctionVO> getChildFunction(PageModel<FunctionVO> pager,
 			String id) {
@@ -88,7 +111,6 @@ public class FunctionServiceImpl extends BasicService<Function, String>
 	 */
 	@Override
 	public void createFunction(FunctionVO vo) {
-		// TODO Auto-generated method stub
 		Function entity = new Function();
 		entity = (Function) vo.getModule();
 		
@@ -102,5 +124,48 @@ public class FunctionServiceImpl extends BasicService<Function, String>
 		
 		this.save(entity);
 	}
+
+	
+	/**
+	 * 修改模块
+	 */
+	@Override
+	public void modifierFunction(FunctionVO vo) {
+		// TODO Auto-generated method stub
+		Function function = this.get(vo.getId());
+		if(function != null){
+			function.setFunctionName(vo.getFunctionName());
+			function.setUrl(vo.getUrl());
+			function.setIcon(vo.getIcon());
+			function.setShowOrder(vo.getShowOrder());
+			
+			function.setVisible(vo.isVisible());
+			function.setStatus(vo.getStatus());
+			function.setModificationDate(new Date());
+			function.setRemark(vo.getRemark());
+			if(StringUtils.isBlank(function.getId())){
+				User creator = new User();
+				creator.setId(vo.getCreatorId());
+				function.setCreator(creator);
+				function.setCreationDate(new Date());
+			}else{
+				User modifier = new User();
+				modifier.setId(vo.getModifierId());
+				function.setModifier(modifier);
+				function.setModificationDate(new Date());
+			}
+			
+			//一对多双向关系维护
+			Function parent = this.get(vo.getParentFunction());
+			function.setParentFunction(parent);
+			
+			Set<Function> children = parent.getChildFunction();
+			children.add(function);
+			parent.setChildFunction(children);
+		}
+		
+		this.update(function);
+	}
+
 
 }

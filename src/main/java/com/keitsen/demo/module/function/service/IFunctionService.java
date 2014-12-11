@@ -14,7 +14,12 @@ public interface IFunctionService extends IBasicService<Function, String>{
 	
 	List<FunctionTreeVO> getFunctionTreeByParentId(String id);
 
+	List<FunctionTreeVO> getAllFunctionTree();
+	
 	PageModel<FunctionVO> getChildFunction(PageModel<FunctionVO> pager, String id);
 
 	void createFunction(FunctionVO vo);
+
+	void modifierFunction(FunctionVO vo);
+
 }

@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>用户列表</title>
+<title>区域列表</title>
 <%@ include file="/common/head.jsp" %>
 </head>
 <body>
@@ -16,10 +16,10 @@
 
 
 		
-		$('#userlist').datagrid({
+		$('#regionlist').datagrid({
 			idField:'id',
 			fitColumns:true ,
-		    url:'${ctx}/sys/user/user!getAllUser.action',
+		    url:'${ctx}/sys/domain/region!getAllRegion.action',
 		    fit : true,
 		    loadMsg:'数据正在加载,请稍候...',
 		    remoteSort:false,
@@ -28,45 +28,46 @@
 			height: '50%',
 			toolbar : [
            		{
-					text : '新增用户',
+					text : '新增区域',
 					iconCls :'icon-add',
 					handler:function(){
 						flag = 'add';
 						//设置表单参数
-						$('#userdialog').dialog({
-							title :'新增用户',
-							modal : true
+						$('#regiondialog').dialog({
+							title:'新增区域'
 						});
 						//清空表单
-						$('#userform').get(0).reset();
+						$('#regionform').get(0).reset();
 						//显示表单
-						$('#userdialog').dialog('open');
+						$('#regiondialog').dialog('open');
 
 					}
 				},{
-					text : '修改用户',
+					text : '修改区域',
 					iconCls :'icon-edit',
 					handler:function(){
 						flag = 'edit';
-						var arr = $('#userlist').datagrid('getSelections');
+						var arr = $('#regionlist').datagrid('getSelections');
 						if(arr.length != 1){
 							$.messager.alert("提示信息!",'只能选择一行记录进行修改!','warning');
-							$('#userlist').datagrid('unselectAll');
+							$('#regionlist').datagrid('unselectAll');
 						}else{
-							$('#userdialog').dialog({
+							$('#regiondialog').dialog({
 								title:'修改用户'
 							});
 							
 							//打开表单
-							$('#userdialog').dialog('open');
+							$('#regiondialog').dialog('open');
 
 							//清空表单
-							$('#userform').get(0).reset();
+							$('#regionform').get(0).reset();
 
-							$('#userform').form('load',{
+							$('#regionform').form('load',{
 								'vo.id' : arr[0].id,
-								'vo.username': arr[0].username,
-								'vo.password': arr[0].password,
+								'vo.regionName': arr[0].regionName,
+								'vo.regionCode': arr[0].regionCode,
+								'vo.shortName': arr[0].shortName,
+								'vo.description': arr[0].description,
 								'vo.visible' : arr[0].visible,
 								'vo.status'	: arr[0].status
 							})
@@ -76,7 +77,7 @@
 					text : '删除用户',
 					iconCls :'icon-cancel',
 					handler:function(){
-						var arr = $('#userlist').datagrid('getSelections');
+						var arr = $('#regionlist').datagrid('getSelections');
 						if(arr.length <= 0){
 							$.messager.alert("提示信息!",'至少选择一行记录进行删除!','warning');
 						}else{
@@ -88,13 +89,13 @@
 									}
 									ids = ids.substring(0, ids.length-1);
 									$.post(
-											'${ctx}/sys/user/user!deleteUsers.action',
+											'${ctx}/sys/domain/region!deleteRegions.action',
 											{ids:ids},
 											function(result){
 												//1 刷新数据表格
-												$('#userlist').datagrid('reload');
+												$('#regionlist').datagrid('reload');
 												//2 清空idField
-												$('#userlist').datagrid('unselectAll');
+												$('#regionlist').datagrid('unselectAll');
 												//3提示信息
 												$.messager.show({
 													title : result.type,
@@ -121,9 +122,10 @@
                 {field:'ck',checkbox:true}
             ]],
 		    columns:[[    
-		        {field:'username',title:'用户名'},    
-		        {field:'password',title:'密码'},
-		        {field:'creator',title:'创建人'},
+		        {field:'regionName',title:'区域名称'},    
+		        {field:'regionCode',title:'区域编码'},
+		        {field:'shortName',title:'区域简称'},
+		        {field:'description',title:'描述'},
 		        {field:'visible',title:'是否可见',
 		        	formatter:function(value,rowData,rowIndex){
 		        		if(value){
@@ -155,20 +157,20 @@
 		});	
 		
 		$('#submit').click(function(){
-			if($('#userform').form('validate')){
-				var url = flag=='add'?'${ctx}/sys/user/user!addUser.action':'${ctx}/sys/user/user!updateUser.action';
+			if($('#regionform').form('validate')){
+				var url = flag=='add'?'${ctx}/sys/domain/region!addRegion.action':'${ctx}/sys/domain/region!updateRegion.action';
 				$.ajax({
 					type : 'post',
 					url	: url,
 					cache : false,
-					data : $("#userform").serialize(),	//调用自定义的序列化表单
+					data : $("#regionform").serialize(),	//调用自定义的序列化表单
 					dataType : 'json',
 					success:function(result){
 						//1关闭窗口
-						$('#userdialog').dialog('close');
+						$('#regiondialog').dialog('close');
 						//2刷新datagrid并取消选择状态
-						$('#userlist').datagrid('reload');
-						$('#userlist').datagrid('unselectAll');
+						$('#regionlist').datagrid('reload');
+						$('#regionlist').datagrid('unselectAll');
 						//3提示信息
 						$.messager.show({
 							title : result.type,
@@ -185,27 +187,33 @@
 			}
 		});
 		
-		$('#reset').click(function(){
-			$('#userform').form('reset');
-		});
+// 		$('#reset').click(function(){
+// 			$('#userform').form('reset');
+// 		});
 		
-		$('#close').click(function(){
-			$('#userdialog').dialog('close');
-		});
+// 		$('#close').click(function(){
+// 			$('#userdialog').dialog('close');
+// 		});
 		
 	})
   
 </script>
-	<table id="userlist"></table>  
-	<div id="userdialog"  style="width:500px;height:300px">
-		<form id="userform" class="easyui-form" action="" method="post" >
+	<table id="regionlist"></table>  
+	<div id="regiondialog" modal="true" style="width:500px;height:300px">
+		<form id="regionform" class="easyui-form" action="" method="post" >
 			<input type="hidden" id="userid" name="vo.id" />
 			<table >
 				<tr >
-					<td><s:label>用户名</s:label></td>
-					<td><input type="text" id="username" name="vo.username" class="easyui-validatebox" required="true" /></td>
-					<td><s:label>密码</s:label></td>
-					<td><input type="password" id="password" name="vo.password" class="easyui-validatebox" required="true"/></td>
+					<td><s:label>区域名称</s:label></td>
+					<td><input type="text" id="regionname" name="vo.regionName" class="easyui-validatebox" required="true"/></td>
+					<td><s:label>区域编码</s:label></td>
+					<td><input type="text" id="regioncode" name="vo.regionCode" class="easyui-validatebox" required="true"/></td>
+				</tr>
+				<tr >
+					<td><s:label>区域简称</s:label></td>
+					<td><input type="text" id="shortName" name="vo.shortName" class="easyui-validatebox" required="true"/></td>
+					<td><s:label>区域描述</s:label></td>
+					<td><input type="text" id="description" name="vo.description" class="easyui-validatebox" /></td>
 				</tr>
 				<tr>
 					<td><s:label>是否可见</s:label></td>

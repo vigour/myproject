@@ -19,7 +19,7 @@ import com.keitsen.demo.basic.entity.PageModel;
 import com.keitsen.demo.basic.service.IBasicService;
 import com.keitsen.demo.basic.util.ReflectionUtil;
 @Transactional(rollbackFor = Exception.class)
-public abstract  class BasicService <M extends Serializable, PK extends Serializable> implements IBasicService<M, PK>{
+public  class BasicService <M extends Serializable, PK extends Serializable> implements IBasicService<M, PK>{
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -107,9 +107,20 @@ public abstract  class BasicService <M extends Serializable, PK extends Serializ
 
     @Override
     public void deleteArray(PK[] id) {
+    	if(id.length <= 0){
+    		return;
+    	}
     	getBasicDao().deleteArray(id);
     }
 
+    @Override
+	public void deleteByIds(PK[] ids) {
+    	if(ids.length <= 0){
+    		return;
+    	}
+    	getBasicDao().deleteByIds(ids);
+	}
+    
     @Override
     public boolean exists(PK id) {
         return getBasicDao().exists(id);
@@ -244,4 +255,5 @@ public abstract  class BasicService <M extends Serializable, PK extends Serializ
 	public void batchDelete(Collection<M> collection) {
 		getBasicDao().batchDelete(collection);
 	}
+
 }

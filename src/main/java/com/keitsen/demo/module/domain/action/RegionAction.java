@@ -1,4 +1,4 @@
-package com.keitsen.demo.module.user.action;
+package com.keitsen.demo.module.domain.action;
 
 import java.util.Date;
 
@@ -9,75 +9,75 @@ import org.springframework.stereotype.Controller;
 
 import com.keitsen.demo.basic.BasicConstants;
 import com.keitsen.demo.basic.action.BasicAction;
-import com.keitsen.demo.module.user.service.IUserService;
-import com.keitsen.demo.module.user.vo.UserVO;
+import com.keitsen.demo.module.domain.service.IRegionService;
+import com.keitsen.demo.module.domain.vo.RegionVO;
 
 @Controller
-@Namespace("/sys/user")
-public class UserAction extends BasicAction<UserVO>{
+@Namespace("/sys/domain")
+public class RegionAction extends BasicAction<RegionVO> {
 
-	private static final long serialVersionUID = 2868562624590504086L;
+	private static final long serialVersionUID = 2080212132984014962L;
+
+	private IRegionService regionService;
 
 	
-	private IUserService userService;
-	
-	@Resource(name = IUserService.SERVICE_NAME)
-	public void setUserService(IUserService userService) {
-		this.userService = userService;
+	@Resource(name = IRegionService.SERVICE_NAME)
+	public void setRegionService(IRegionService regionService) {
+		this.regionService = regionService;
 	}
-
-
+	
 	/**
-	 * 页面跳转
+	 * 跳转页面
 	 */
+	@Override
 	public String execute() throws Exception {
-		getLog().info("进入用户模块列表");
+		getLog().info("进入区域模块列表");
 		return BasicConstants.MODULE_LIST;
 	}
 	
-	
 	/**
-	 * 分页获取所有用户
+	 * 分页获取区域列表
 	 * @return
 	 * @throws Exception
 	 */
-	public String getAllUser() throws Exception{
-		getLog().info("分页获取当前数据库用户信息");
-		pager = userService.getAllUserPage(pager);
+	public String getAllRegion() throws Exception {
+		getLog().info("分页显示区域模块列表");
+		pager = regionService.getAllRegionPage(pager);
 		renderPageModel(pager);
 		return null;
 	}
 	
-
 	
 	/**
-	 * 添加用户
+	 * 添加区域
 	 * @return
 	 * @throws Exception
 	 */
-	public String addUser() throws Exception{
-		getLog().info("保存新增的用户信息");
+	public String addRegion() throws Exception{
+		getLog().info("保存区域模块信息");
 		vo.setCreatorId(getLoginVO().getLoginId());
 		vo.setCreationDate(new Date());
-		this.userService.createUser(vo);
+		this.regionService.createRegion(vo);
 		result.setStatus("ok");
 		result.setType(BasicConstants.RESULT_TYPE_SUCCESS);
 		result.setMessage(BasicConstants.CREATE_SUCCESS_MESSAGE);
 		renderJson(result.toJsonString());
+		
 		return null;
 	}
 	
 	
+	
 	/**
-	 * 修改用户
+	 * 修改区域信息
 	 * @return
 	 * @throws Exception
 	 */
-	public String updateUser() throws Exception{
-		getLog().info("保存修改的用户信息");
+	public String updateRegion() throws Exception{
+		getLog().info("保存修改的区域模块信息");
 		vo.setModifierId(getLoginVO().getLoginId());
 		vo.setModificationDate(new Date());
-		this.userService.modifierUser(vo);
+		this.regionService.modifierRegion(vo);
 		result.setStatus("ok");
 		result.setType(BasicConstants.RESULT_TYPE_SUCCESS);
 		result.setMessage(BasicConstants.EDIT_SUCCESS_MESSAGE);
@@ -86,22 +86,19 @@ public class UserAction extends BasicAction<UserVO>{
 	}
 	
 	
-	
 	/**
-	 * 删除用户
+	 * 删除区域信息
 	 * @return
 	 * @throws Exception
 	 */
-	public String deleteUsers() throws Exception{
-		getLog().info("删除用户信息");
+	public String deleteRegions() throws Exception{
+		getLog().info("删除用户区域信息");
 		String ids[] = request.getParameter("ids").split(",");
-		this.userService.deleteByIds(ids);
+		this.regionService.deleteByIds(ids);
 		result.setStatus("ok");
 		result.setType(BasicConstants.RESULT_TYPE_SUCCESS);
 		result.setMessage(BasicConstants.DELETE_SUCCESS_MESSAGE);
 		renderJson(result.toJsonString());
 		return null;
 	}
-	
-	
 }

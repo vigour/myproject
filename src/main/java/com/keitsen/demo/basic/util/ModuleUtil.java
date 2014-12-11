@@ -18,8 +18,8 @@ public class ModuleUtil {
 	public static List<VO> transformToVO(List<Object> list) {
 		List<VO> voList = new ArrayList<VO>();
 		if (list != null) {
-			for (Object obj : list) {
-				Module module = (Module) obj;
+			for(int i=0,len=list.size(); i<len; i++){
+				Module module = (Module) list.get(i);
 				voList.add(module.getVO());
 			}
 		}

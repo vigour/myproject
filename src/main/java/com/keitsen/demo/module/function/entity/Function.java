@@ -166,7 +166,7 @@ public class Function extends UUIDEntity implements Module {
 		this.parentFunction = parentFunction;
 	}
 
-	@OneToMany(targetEntity = Function.class, cascade = { CascadeType.ALL }, mappedBy = "parentFunction")
+	@OneToMany(targetEntity = Function.class,  mappedBy = "parentFunction" ,orphanRemoval=true)
 	@Fetch(FetchMode.SUBSELECT)
 	@OrderBy("showOrder")
 	public Set<Function> getChildFunction() {

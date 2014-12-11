@@ -28,6 +28,8 @@ public interface IBasicService<M extends Serializable, PK extends Serializable> 
     public void deleteObject(M model) ;
 
     public void deleteArray(PK id[]) ;
+    
+    public void deleteByIds(PK ids[]);
 
     public boolean exists(PK id);
 

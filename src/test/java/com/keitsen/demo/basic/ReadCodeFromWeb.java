@@ -9,7 +9,7 @@ import java.net.URL;
 
 /**
  * 从国家统计局网站爬取2013年12位到村级别的行政区划代码
- * @author XP
+ * @author Miles
  *
  */
 public class ReadCodeFromWeb {
@@ -34,7 +34,7 @@ public class ReadCodeFromWeb {
                 String a = s.substring(7, s.indexOf("'>"));
                 String name = s.substring(s.indexOf("'>")+2, s.indexOf("<BR/>"));
                 
-                FileWriter fw = new FileWriter(new File("c:/"+name+".html"));
+                FileWriter fw = new FileWriter(new File("D:/Studio/行政区划/"+name+".html"));
                 BufferedWriter bw = new BufferedWriter(fw);
                 
                 bw.write("<html><body><table border='1' bordercolor='#000000' style='border-collapse:collapse'><tr><td>代码</td><td>省</td><td>市</td><td>县</td><td>镇</td><td>城乡分类</td><td>村/街道</td></tr>");
@@ -201,7 +201,7 @@ public class ReadCodeFromWeb {
     public static String getContent(String strUrl) throws Exception {
         try {
             URL url = new URL(strUrl);
-            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(),"gbk"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(),"gb18030"));
             String s = "";
             StringBuffer sb = new StringBuffer("");
             while ((s = br.readLine()) != null) {

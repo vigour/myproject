@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="中国">
+	<!--这个是根节点-->
+	<Province name="北京市" level="1">
+		<City name="市辖区" level="2" code="110100000000">
+			<District name="东城区" level="3" code="110101000000">
+				<Town name="东华门街道办事处" level="4" code="110101001000">
+					<Village name="多福巷社区居委会" level="5" code="110101001001" typeCode="111"/>
+				</Town>
+			</District>
+		</City>
+	</Province>
+</root>

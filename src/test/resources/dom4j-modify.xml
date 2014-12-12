@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root xmlns="中国">
-	<!--这个是根节点-->
-	<Province name="北京市" level="1">
-		<City name="市辖区" level="2" code="110100000000">
-			<District name="东城区" level="3" code="110101000000">
-				<Town name="东华门街道办事处" level="4" code="110101001000">
-					<Village name="多福巷社区居委会" level="5" code="110101001001" typeCode="111"/>
-				</Town>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
+<root xmlns="root" name="中国" level="0" code="86"><!--这个是根节点-->
+	<Province name="北京市" level="1" code="11"><!--省份节点-->
+		<City level="2" code="110100000000" name="市辖区"><!--城市节点-->
+			<District level="3" code="110101000000" name="东城区"><!--区节点-->
+				<Town level="4" code="110101001000" name="东华门街道办事处"><!--镇节点-->
+					<Village level="5" code="110101001001" typeCode="111" name="多福巷社区居委会"><!--村节点-->
+					</Village>
+					</Town>
 			</District>
 		</City>
 	</Province>

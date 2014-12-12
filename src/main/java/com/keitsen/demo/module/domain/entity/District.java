@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -36,6 +35,29 @@ import com.keitsen.demo.basic.vo.VO;
 public class District extends UUIDEntity implements Module {
 
 	private static final long serialVersionUID = -3730364255005279631L;
+	
+	
+
+	public District() {
+	}
+	
+	
+
+	public District(String districtName, String code, String zip,
+			String zoneCode, String suffix, String description, int level) {
+		super();
+		this.districtName = districtName;
+		this.code = code;
+		this.zip = zip;
+		this.zoneCode = zoneCode;
+		this.suffix = suffix;
+		this.description = description;
+		this.level = level;
+	}
+	
+	
+
+
 
 	/**
 	 * 名称
@@ -56,6 +78,12 @@ public class District extends UUIDEntity implements Module {
 	 * 类型：11:省,12:直辖市,13:自治区,14:特别行政区,\r\n21:市, 31:市辖区,6:县
 	 */
 	private int type;
+	
+	/**
+	 * 3位数字组成
+	 */
+	private String typeCode;
+	
 
 	/**
 	 * 邮编
@@ -119,7 +147,7 @@ public class District extends UUIDEntity implements Module {
 
 	
 	
-	@Column(name = "District_NAME")
+	@Column(name = "DISTRICT_NAME")
 	public String getDistrictName() {
 		return districtName;
 	}
@@ -154,6 +182,19 @@ public class District extends UUIDEntity implements Module {
 	public void setType(int type) {
 		this.type = type;
 	}
+
+	@Column(name = "TYPE_CODE")
+	public String getTypeCode() {
+		return typeCode;
+	}
+
+
+
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
+	}
+
+
 
 	@Column(name = "ZIP", length = 6)
 	public String getZip() {
@@ -258,7 +299,7 @@ public class District extends UUIDEntity implements Module {
 
 	@OneToMany(targetEntity = District.class, cascade = { CascadeType.ALL }, mappedBy = "parentDistrict")
 	@Fetch(FetchMode.SUBSELECT)
-	@OrderBy("showOrder")
+	//@OrderBy("showOrder")
 	public Set<District> getChildDistrict() {
 		return childDistrict;
 	}

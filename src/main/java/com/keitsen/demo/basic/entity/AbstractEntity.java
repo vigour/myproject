@@ -27,12 +27,12 @@ public abstract class AbstractEntity implements Serializable{
 	/**
 	 * 状态
 	 */
-	protected int status;
+	protected int status = 1;
 	
 	/**
 	 * 创建时间
 	 */
-	protected Date creationDate;
+	protected Date creationDate = new Date();
 	
 	
 	/**

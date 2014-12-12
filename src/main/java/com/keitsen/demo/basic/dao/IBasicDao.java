@@ -63,6 +63,8 @@ public interface IBasicDao<M extends Serializable, PK extends Serializable> {
 	
 	
 	//HQL查询
+	public void executeHQL(final String hql, Map<String,?> values);
+	
 	public <X> List<X> find(final String hql, final Object... values);
 
 	public <X> List<X> find(final String hql, final Map<String, ?> values);

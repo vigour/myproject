@@ -55,6 +55,7 @@ public class DomainDOM4J {
             readNode(e, prefix);  
         }  
     } 
+    
 	@Test
 	public void getProvinceXML() throws Exception{
 		//FIXME
@@ -70,16 +71,29 @@ public class DomainDOM4J {
 				String name = s.substring(s.indexOf("'>")+2,s.indexOf("<BR/>"));
 				 // 创建一个xml文档  
 	            Document doc = DocumentHelper.createDocument();  
-	            Element country = doc.addElement("root", "中国");
+	            Element country = doc.addElement("root", "root");
+//	            country.addAttribute("name", "中国");
+//	            country.addAttribute("level", "0");
+//	            country.addAttribute("code", "86");
 	            country.addComment("这个是根节点");  
 
 	            System.out.println("爬取:"+name);
 	            
 	            //省份 (privince) or 直辖市(Municipality) LV1
 	            Element province = country.addElement("Province");
+	            String code = a.substring(0, a.indexOf(".HTML"));
 	            province.addAttribute("name", name); 
 	            province.addAttribute("level", "1");
-	            province.addAttribute("code", a.substring(0, a.indexOf(".HTML")));
+	            province.addAttribute("code", code);
+//	            //邮编取前6位
+//	            String zipcode = code;
+//	            if(zipcode.length() <= 6){
+//	    			zipcode = StringUtils.rightPad(zipcode, 6,"0");
+//	    		}else{
+//	    			zipcode = StringUtils.substring(zipcode, 0, 6);
+//	    		}
+//	            province.addAttribute("zipcode", zipcode);
+	            
 	            province.addComment("省份节点");
 
 	            province = getcity(a,province);
@@ -118,6 +132,7 @@ public class DomainDOM4J {
             city.addAttribute("level", "2");
             city.addComment("城市节点");
             
+            
             for(int si = 1; si<3; si++){
                 if(si==1){//取链接和编码
                     cityUrl = strs[si].substring(0, strs[si].indexOf("'>"));
@@ -125,8 +140,6 @@ public class DomainDOM4J {
                     city.addAttribute("code", cityCode);
                 }else{
                     city.addAttribute("name", strs[si].substring(strs[si].indexOf("'>")+2, strs[si].indexOf("</A>")));
-                    
-                    System.out.println("爬取:"+strs[si].substring(strs[si].indexOf("'>")+2, strs[si].indexOf("</A>")));
                 }
             }
             city = getDistrict(cityUrl.substring(0, cityUrl.indexOf("/")+1),cityUrl,city);
@@ -157,18 +170,18 @@ public class DomainDOM4J {
     
             //发现石家庄有一个县居然没超链接，特殊处理
             if(districts[i].indexOf("<A HREF='")==-1){
-                district.addAttribute("code", districts[i].substring(6, 18));
+            	String districtCode = districts[i].substring(6, 18);
+                district.addAttribute("code", districtCode);
                 
                 district.addAttribute("name", districts[i].substring(districts[i].indexOf("</TD><TD>")+9,districts[i].lastIndexOf("</TD>")));
-                System.out.println(districts[i].substring(districts[i].indexOf("</TD><TD>")+9,districts[i].lastIndexOf("</TD>")));
 
             }else{
                 String[] strs = districts[i].split("<A HREF='");
                 for(int si = 1; si<3; si++){
                     if(si==1){//取链接和编码
                         districtUrl = strs[si].substring(0, strs[si].indexOf("'>"));
-                        String cityCode = strs[si].substring(strs[si].indexOf("'>")+2, strs[si].indexOf("</A>"));
-                        district.addAttribute("code", cityCode);
+                        String districtCode = strs[si].substring(strs[si].indexOf("'>")+2, strs[si].indexOf("</A>"));
+                        district.addAttribute("code", districtCode);
                     }else{
                     	district.addAttribute("name", strs[si].substring(strs[si].indexOf("'>")+2, strs[si].indexOf("</A>")));
                     }
@@ -199,8 +212,8 @@ public class DomainDOM4J {
             for(int si = 1; si<3; si++){
                 if(si==1){//取链接和编码
                 	townUrl = strs[si].substring(0, strs[si].indexOf("'>"));
-                    town.addAttribute("code", strs[si].substring(strs[si].indexOf("'>")+2, strs[si].indexOf("</A>")));
-                    
+                	String townCode =  strs[si].substring(strs[si].indexOf("'>")+2, strs[si].indexOf("</A>"));
+                    town.addAttribute("code", townCode);
                 }else{
                     town.addAttribute("name", strs[si].substring(strs[si].indexOf("'>")+2, strs[si].indexOf("</A>")));
                 }

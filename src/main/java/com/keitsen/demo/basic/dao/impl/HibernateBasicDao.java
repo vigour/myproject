@@ -183,6 +183,11 @@ public abstract  class HibernateBasicDao<M extends Serializable, PK extends Seri
 		this.getSession().flush();
 	}
 
+    
+    public void executeHQL(final String hql, Map<String,?> values){
+    	this.createQuery(hql,values).executeUpdate();
+    }
+    
     @Override
     public boolean exists(PK id) {
     	Assert.notNull(id, "id不能为空");

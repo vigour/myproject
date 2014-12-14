@@ -129,7 +129,6 @@ public class FunctionAction extends BasicAction<FunctionVO >{
 		getLog().info("分页获取当前数据库功能模块信息");
 		pager = functionService.getChildFunction(pager,id);
 		
-		getLog().info(pager.getTotalRecords());
 		renderPageModel(pager);
 		return null;
 	}

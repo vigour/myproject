@@ -70,11 +70,21 @@ public class ExportDomainData {
 		this.districtDao = districtDao;
 	}
 
+	
+	@Test
+	public void findRootDistrict(){
+		System.out.println("Root is");
+		District district = this.districtDao.findUnique(" FROM District d where d.parentDistrict is null");
+		System.out.println("Root is" + district.getId());
+	}
+	
 	@Test
 	public void deleteAllDistrict(){
+		
+		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("id", "0");
-		this.districtDao.executeHQL( "delete FROM District t where t.id <>:id", map);
+		//this.districtDao.executeHQL( "delete FROM District t where t.id <>:id", map);
 	}
 	
 	@Test
@@ -131,7 +141,7 @@ public class ExportDomainData {
             Document doc = reader.read(in);  
             in.close();
             Element root = doc.getRootElement();
-            District parentDistrict = this.districtDao.get("402882224a3dc897014a3dc89be40000");
+            District parentDistrict = this.districtDao.get("297e8d8a4a414edb014a414ede6d0000");
             getChildrenNode(root, parentDistrict);
         } catch (DocumentException e) {  
             e.printStackTrace();  

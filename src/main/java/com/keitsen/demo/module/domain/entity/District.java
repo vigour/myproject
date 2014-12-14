@@ -21,6 +21,7 @@ import org.hibernate.annotations.FetchMode;
 import com.keitsen.demo.basic.entity.Module;
 import com.keitsen.demo.basic.entity.UUIDEntity;
 import com.keitsen.demo.basic.vo.VO;
+import com.keitsen.demo.module.domain.vo.DistrictVO;
 
 /**
  * 按照中国行政区域划分：省/直辖市(LV1)--市/自治县/自治州(LV2)--区/县(LV3)--街道/镇/乡(LV4)--社区/居委会/村委会(LV5)
@@ -310,8 +311,47 @@ public class District extends UUIDEntity implements Module {
 
 	@Transient
 	public VO getVO() {
-		// TODO Auto-generated method stub
-		return null;
+		DistrictVO vo = new DistrictVO();
+		vo.setId(getId());
+		vo.setDistrictName(districtName);
+		vo.setShortName(shortName);
+		vo.setCode(code);
+		vo.setType(type);
+		vo.setTypeCode(typeCode);
+		vo.setZip(zip);
+		vo.setZoneCode(zoneCode);
+		vo.setSuffix(suffix);
+		vo.setUrl(url);
+		vo.setIcon(icon);
+		vo.setDescription(description);
+		vo.setLevel(level);
+		vo.setLeafId(leafId);
+		
+		if(null != region){
+			vo.setRegion(region.getId());
+			vo.setRegionName(region.getRegionName());
+			
+		}
+		
+		if(parentDistrict != null){
+			vo.setParentDistrict(parentDistrict.getId());
+			vo.setParentDistrictName(parentDistrict.getDistrictName());
+		}
+		
+		if(creator!=null){
+			vo.setCreator(creator.getUsername());
+			vo.setCreatorId(creator.getId());
+		}
+		vo.setCreationDate(getCreationDate());
+		if(modifier!=null){
+			vo.setModifier(modifier.getUsername());
+			vo.setModifierId(modifier.getId());
+		}		
+		vo.setModificationDate(getModificationDate());
+		vo.setRemark(getRemark());
+		vo.setVisible(this.isVisible());
+		vo.setStatus(getStatus());
+		return vo;
 	}
 
 }

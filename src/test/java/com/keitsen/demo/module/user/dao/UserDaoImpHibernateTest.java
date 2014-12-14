@@ -19,6 +19,11 @@ public class UserDaoImpHibernateTest extends AbstractTestCase{
     //@Resource(name="userDao")代表根据名称来查找配置文件，userDao即为配置文件中的名称
     @Resource(name="userDao")
     private IUserDao userDao;
+    
+    @Test
+    public void testGetIdName(){
+    	System.out.println(this.userDao.getIdName());
+    }
 
     @Test
     public void testSave() throws Exception {
